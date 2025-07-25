@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from "react";
 import {
   FaSearch,
   FaPhoneAlt,
@@ -40,14 +40,14 @@ import {
   FaServer,
   FaArrowRight,
   FaBook,
-} from 'react-icons/fa';
-import { Link, useNavigate } from 'react-router-dom';
+} from "react-icons/fa";
+import { Link, Links, useNavigate } from "react-router-dom";
 
 export default function Navbar() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [openMobileDropdown, setOpenMobileDropdown] = useState(null);
   const [isCoursesOpen, setIsCoursesOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const searchContainerRef = useRef(null);
   const dropdownRef = useRef(null);
@@ -57,7 +57,7 @@ export default function Navbar() {
     setOpenMobileDropdown(openMobileDropdown === dropdown ? null : dropdown);
   };
 
-   const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = () => {
     setIsLoading(true);
@@ -69,165 +69,169 @@ export default function Navbar() {
   };
   const categoriesMenuItems = [
     {
-      key: '1',
-      label: 'Data Science Course',
-      path: '/courses/data-science',
+      key: "1",
+      label: "Data Science Course",
+      path: "/courses/data-science",
       icon: <FaLaptopCode className="text-orange-500" />,
-      description: 'Master data analysis and visualization',
+      description: "Master data analysis and visualization",
     },
     {
-      key: '2',
-      label: 'AI for Leaders',
-      path: '/courses/ai-for-leaders',
+      key: "2",
+      label: "AI for Leaders",
+      path: "/courses/ai-for-leaders",
       icon: <FaLaptopCode className="text-orange-500" />,
-      description: 'Master AI leadership skills',
+      description: "Master AI leadership skills",
     },
     {
-      key: '3',
-      label: 'Advanced Data Science Course',
-      path: '/courses/advanced-data-science',
+      key: "3",
+      label: "Advanced Data Science Course",
+      path: "/courses/advanced-data-science",
       icon: <FaLaptopCode className="text-orange-500" />,
-      description: 'Advanced techniques in data science',
+      description: "Advanced techniques in data science",
     },
     {
-      key: '4',
-      label: 'Tosca Automation',
-      path: '/courses/tosca-automation',
+      key: "4",
+      label: "Tosca Automation",
+      path: "/courses/tosca-automation",
       icon: <FaRobot className="text-purple-500" />,
-      description: 'Automation testing with Tosca',
+      description: "Automation testing with Tosca",
     },
     {
-      key: '5',
-      label: 'Business Analyst Course',
-      path: '/courses/business-analyst',
+      key: "5",
+      label: "Business Analyst Course",
+      path: "/courses/business-analyst",
       icon: <FaChartLine className="text-green-500" />,
-      description: 'Become a certified business analyst',
+      description: "Become a certified business analyst",
     },
     {
-      key: '21',
-      label: 'Business Analyst With Tools Course',
-      path: '/courses/business-analyst-tools',
+      key: "21",
+      label: "Business Analyst With Tools Course",
+      path: "/courses/business-analyst-tools",
       icon: <FaChartLine className="text-green-500" />,
-      description: 'Become a certified business analyst',
+      description: "Become a certified business analyst",
     },
     {
-      key: '6',
-      label: 'Program Manager Course',
-      path: '/courses/program-manager',
+      key: "6",
+      label: "Program Manager Course",
+      path: "/courses/program-manager",
       icon: <FaTasks className="text-indigo-500" />,
-      description: 'Advanced program management',
+      description: "Advanced program management",
     },
     {
-      key: '7',
-      label: 'Digital Marketing Course',
-      path: '/courses/digital-marketing',
+      key: "7",
+      label: "Digital Marketing Course",
+      path: "/courses/digital-marketing",
       icon: <FaHashtag className="text-red-500" />,
-      description: 'Master digital marketing strategies',
+      description: "Master digital marketing strategies",
     },
     {
-      key: '8',
-      label: 'AI Automation Course',
-      path: '/courses/ai-automation',
+      key: "8",
+      label: "AI Automation Course",
+      path: "/courses/ai-automation",
       icon: <FaBrain className="text-teal-500" />,
-      description: 'AI-powered automation solutions',
+      description: "AI-powered automation solutions",
     },
     {
-      key: '9',
-      label: 'Product Management Course',
-      path: '/courses/product-management',
+      key: "9",
+      label: "Product Management Course",
+      path: "/courses/product-management",
       icon: <FaBoxOpen className="text-yellow-500" />,
-      description: 'From ideation to launch',
+      description: "From ideation to launch",
     },
     {
-      key: '10',
-      label: 'Advanced Automation Course',
-      path: '/courses/advance-automation',
+      key: "10",
+      label: "Advanced Automation Course",
+      path: "/courses/advance-automation",
       icon: <FaCogs className="text-blue-500" />,
-      description: 'Next-level automation techniques',
+      description: "Next-level automation techniques",
     },
     {
-      key: '12',
-      label: 'Power Automate Course',
-      path: '/courses/power-automate',
+      key: "12",
+      label: "Power Automate Course",
+      path: "/courses/power-automate",
       icon: <FaBolt className="text-purple-500" />,
-      description: 'Microsoft Power Automate training',
+      description: "Microsoft Power Automate training",
     },
     {
-      key: '13',
-      label: 'UiPath Course',
-      path: '/courses/uipath',
+      key: "13",
+      label: "UiPath Course",
+      path: "/courses/uipath",
       icon: <FaRobot className="text-blue-600" />,
-      description: 'RPA development with UiPath',
+      description: "RPA development with UiPath",
     },
     {
-      key: '14',
-      label: 'Agile Project Manager Course',
-      path: '/courses/agile-project-manager',
+      key: "14",
+      label: "Agile Project Manager Course",
+      path: "/courses/agile-project-manager",
       icon: <FaProjectDiagram className="text-green-600" />,
-      description: 'Agile methodologies and practices',
+      description: "Agile methodologies and practices",
     },
     {
-      key: '15',
-      label: 'Capital Market Course',
-      path: '/courses/capital-market',
+      key: "15",
+      label: "Capital Market Course",
+      path: "/courses/capital-market",
       icon: <FaMoneyBillWave className="text-green-500" />,
-      description: 'Financial markets and instruments',
+      description: "Financial markets and instruments",
     },
     {
-      key: '16',
-      label: 'Cloud Engg. Azure DevOps',
-      path: '/courses/cloud-engineering-azure-devops',
+      key: "16",
+      label: "Cloud Engg. Azure DevOps",
+      path: "/courses/cloud-engineering-azure-devops",
       icon: <FaMicrosoft className="text-blue-500" />,
-      description: 'Azure cloud and DevOps integration',
+      description: "Azure cloud and DevOps integration",
     },
     {
-      key: '17',
-      label: 'Selenium Using AI Course',
-      path: '/courses/selenium-ai',
+      key: "17",
+      label: "Selenium Using AI Course",
+      path: "/courses/selenium-ai",
       icon: <FaCode className="text-red-500" />,
-      description: 'AI-enhanced test automation',
+      description: "AI-enhanced test automation",
     },
     {
-      key: '18',
-      label: 'Core Java Course',
-      path: '/courses/core-java',
+      key: "18",
+      label: "Core Java Course",
+      path: "/courses/core-java",
       icon: <FaJava className="text-red-400" />,
-      description: 'Fundamentals of Java programming',
+      description: "Fundamentals of Java programming",
     },
     {
-      key: '19',
-      label: 'API Automation with AI Integration Course',
-      path: '/courses/api-automation-ai',
+      key: "19",
+      label: "API Automation with AI Integration Course",
+      path: "/courses/api-automation-ai",
       icon: <FaNetworkWired className="text-purple-500" />,
-      description: 'Automated API testing',
+      description: "Automated API testing",
     },
     {
-      key: '20',
-      label: 'Cypress with TypeScript and AI-Driven Framework',
-      path: '/courses/cypress-typescript-ai',
+      key: "20",
+      label: "Cypress with TypeScript and AI-Driven Framework",
+      path: "/courses/cypress-typescript-ai",
       icon: <FaBug className="text-green-500" />,
-      description: 'Modern testing framework',
+      description: "Modern testing framework",
     },
     {
-      key: '22',
-      label: 'Cloud Engineering with AWS DevOps',
-      path: '/courses/cloud-engineering-aws-devops',
+      key: "22",
+      label: "Cloud Engineering with AWS DevOps",
+      path: "/courses/cloud-engineering-aws-devops",
       icon: <FaChartBar className="text-orange-500" />,
-      description: 'Master AWS cloud infrastructure and DevOps tools',
+      description: "Master AWS cloud infrastructure and DevOps tools",
     },
   ];
 
   const aboutMenuItems = [
-    { key: '1', label: 'Our Story', path: '/about/history' },
-    { key: '2', label: 'Core Committee', path: '/about/team' },
-    { key: '4', label: 'Our Payment Policy', path: '/about/paymentpolicy' },
-    { key: '5', label: 'What we do', path: '/about/whatwedo' },
+    { key: "1", label: "Our Story", path: "/about/history" },
+    { key: "2", label: "Core Committee", path: "/about/team" },
+    { key: "4", label: "Our Payment Policy", path: "/about/paymentpolicy" },
+    { key: "5", label: "What we do", path: "/about/whatwedo" },
   ];
 
   const servicesMenuItems = [
-    { key: '1', label: 'Webinars', path: '/services/webinars' },
-    { key: '2', label: 'Partnership Programs', path: '/services/partnership-programs' },
-    { key: '3', label: 'Freelancing', path: '/services/freelancing' },
+    { key: "1", label: "Webinars", path: "/services/webinars" },
+    {
+      key: "2",
+      label: "Partnership Programs",
+      path: "/services/partnership-programs",
+    },
+    { key: "3", label: "Freelancing", path: "/services/freelancing" },
   ];
 
   const filteredCourses = categoriesMenuItems.filter(
@@ -245,39 +249,52 @@ export default function Navbar() {
     e.preventDefault(); // Prevent default behavior
     e.stopPropagation(); // Stop event bubbling
     setIsSearchOpen(false);
-    setSearchTerm('');
+    setSearchTerm("");
     setSidebarOpen(false);
     navigate(path);
   };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (searchContainerRef.current && !searchContainerRef.current.contains(event.target) &&
-          (!dropdownRef.current || !dropdownRef.current.contains(event.target))) {
+      if (
+        searchContainerRef.current &&
+        !searchContainerRef.current.contains(event.target) &&
+        (!dropdownRef.current || !dropdownRef.current.contains(event.target))
+      ) {
         setIsSearchOpen(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
   return (
     <>
-      <div className="w-full bg-white shadow-sm"  style={{
-backgroundImage: `
+      <div
+        className="w-full bg-white shadow-sm"
+        style={{
+          backgroundImage: `
          linear-gradient(to right, rgba(255,255,255, 0.9), rgba(255,255, 255, 0.9)),
          url('/assets/bg-img/books.jpg')
        `,
-backgroundRepeat: "repeat"
-}}>
+          backgroundRepeat: "repeat",
+        }}
+      >
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center py-3">
             <div className="flex items-center gap-8">
-              <img src="/assets/logo/rmg-logo.png" className="h-10" alt="RMG Logo" />
-              <div className="relative hidden lg:block w-[400px]" ref={searchContainerRef}>
+              <img
+                src="/assets/logo/rmg-logo.png"
+                className="h-10"
+                alt="RMG Logo"
+              />
+              <div
+                className="relative hidden lg:block w-[400px]"
+                ref={searchContainerRef}
+              >
                 <input
                   type="text"
                   placeholder="Search for courses..."
@@ -302,10 +319,14 @@ backgroundRepeat: "repeat"
                           className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors duration-200 cursor-pointer"
                           onClick={(e) => handleCourseClick(item.path, e)}
                         >
-                          <div className="bg-blue-50 p-2 rounded-lg text-blue-600">{item.icon}</div>
+                          <div className="bg-blue-50 p-2 rounded-lg text-blue-600">
+                            {item.icon}
+                          </div>
                           <div>
                             <div className="font-medium">{item.label}</div>
-                            <div className="text-xs text-gray-500">{item.description}</div>
+                            <div className="text-xs text-gray-500">
+                              {item.description}
+                            </div>
                           </div>
                         </Link>
                       ))
@@ -331,10 +352,12 @@ backgroundRepeat: "repeat"
                 </div>
                 <div>
                   <p className="text-xs text-gray-500">Email Us</p>
-                  <p className="text-sm font-medium">contact@refermegroup.com</p>
+                  <p className="text-sm font-medium">
+                    contact@refermegroup.com
+                  </p>
                 </div>
               </div>
-{/* 
+              {/* 
             <button
       onClick={handleLogin}
       disabled={isLoading}
@@ -358,7 +381,6 @@ backgroundRepeat: "repeat"
         'Login'
       )}
     </button> */}
-
             </div>
 
             <button
@@ -384,7 +406,11 @@ backgroundRepeat: "repeat"
                 >
                   <FaBars className="text-lg" />
                   <span>All Courses</span>
-                  <FaChevronDown className={`text-xs mt-0.5 transition-transform ${isCoursesOpen ? 'rotate-180' : ''}`} />
+                  <FaChevronDown
+                    className={`text-xs mt-0.5 transition-transform ${
+                      isCoursesOpen ? "rotate-180" : ""
+                    }`}
+                  />
                 </button>
 
                 {isCoursesOpen && (
@@ -401,11 +427,15 @@ backgroundRepeat: "repeat"
                             to={item.path}
                             className="flex items-center gap-3 px-3 py-1 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors duration-200"
                           >
-                            <div className="bg-blue-50 p-2 rounded-lg text-blue-600">{item.icon}</div>
+                            <div className="bg-blue-50 p-2 rounded-lg text-blue-600">
+                              {item.icon}
+                            </div>
                             <div>
                               <div className="font-medium">{item.label}</div>
                               {item.description && (
-                                <div className="text-xs text-gray-500 mt-1">{item.description}</div>
+                                <div className="text-xs text-gray-500 mt-1">
+                                  {item.description}
+                                </div>
                               )}
                             </div>
                           </Link>
@@ -417,7 +447,10 @@ backgroundRepeat: "repeat"
               </div>
 
               <nav className="flex ml-6 gap-1">
-                <Link to="/" className="px-4 py-2 text-sm font-medium text-white hover:text-yellow-300 transition-colors">
+                <Link
+                  to="/"
+                  className="px-4 py-2 text-sm font-medium text-white hover:text-yellow-300 transition-colors"
+                >
                   Home
                 </Link>
                 <div className="dropdown">
@@ -470,7 +503,7 @@ backgroundRepeat: "repeat"
                   to="/career"
                   className="px-4 py-2 text-sm font-medium text-white hover:text-yellow-300 transition-colors"
                 >
-              Job Groups
+                  Job Groups
                 </Link>
                 <Link
                   to="/contact"
@@ -480,38 +513,71 @@ backgroundRepeat: "repeat"
                 </Link>
               </nav>
             </div>
-
             <div className="flex items-center gap-2">
-              <div className="bg-white bg-opacity-20 p-2 rounded-full text-white hover:opacity-90 transition-opacity">
+              <Link
+                to="https://www.facebook.com/refermegroup.qa"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-white bg-opacity-20 p-2 rounded-full text-white hover:opacity-90 transition-opacity"
+              >
                 <FaFacebook />
-              </div>
-              <div className="bg-white bg-opacity-20 p-2 rounded-full text-white hover:opacity-90 transition-opacity">
+              </Link>
+
+              <Link
+                to="https://www.instagram.com/refermegroup/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-white bg-opacity-20 p-2 rounded-full text-white hover:opacity-90 transition-opacity"
+              >
                 <FaInstagram />
-              </div>
-              <div className="bg-white bg-opacity-20 p-2 rounded-full text-white hover:opacity-90 transition-opacity">
+              </Link>
+
+              <Link
+                to="https://www.linkedin.com/company/refermegroup/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-white bg-opacity-20 p-2 rounded-full text-white hover:opacity-90 transition-opacity"
+              >
                 <FaLinkedin />
-              </div>
-              <div className="bg-white bg-opacity-20 p-2 rounded-full text-white hover:opacity-90 transition-opacity">
+              </Link>
+
+              <Link
+                to="https://twitter.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-white bg-opacity-20 p-2 rounded-full text-white hover:opacity-90 transition-opacity"
+              >
                 <FaTwitter />
-              </div>
-              <div className="bg-white bg-opacity-20 p-2 rounded-full text-white hover:opacity-90 transition-opacity">
+              </Link>
+
+              <Link
+                to="https://youtube.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-white bg-opacity-20 p-2 rounded-full text-white hover:opacity-90 transition-opacity"
+              >
                 <FaYoutube />
-              </div>
+              </Link>
             </div>
           </div>
         </div>
       </div>
 
-      <div className={`fixed top-0 left-0 h-full w-80 bg-white z-50 shadow-xl transform transition-transform duration-300 ease-in-out ${
-        sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-      }`}>
+      <div
+        className={`fixed top-0 left-0 h-full w-80 bg-white z-50 shadow-xl transform transition-transform duration-300 ease-in-out ${
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
         <div className="flex justify-between items-center p-5 border-b sticky top-0 bg-white z-10">
           <img src="/assets/logo/rmg-logo.png" className="h-8" alt="RMG Logo" />
-          <button onClick={() => setSidebarOpen(false)} className="text-gray-500 hover:text-yellow-600 transition-colors">
+          <button
+            onClick={() => setSidebarOpen(false)}
+            className="text-gray-500 hover:text-yellow-600 transition-colors"
+          >
             <FaTimes size={20} />
           </button>
         </div>
-{/* 
+        {/* 
         <div className="p-4 border-b">
           <div className="relative" ref={searchContainerRef}>
             <input
@@ -552,18 +618,26 @@ backgroundRepeat: "repeat"
 
         <div className="overflow-y-scroll h-[calc(100%-100px)]">
           <nav className="flex flex-col py-2">
-            <Link to="/" className="px-5 py-3 border-b border-gray-100 font-medium hover:bg-yellow-50 transition-colors" onClick={() => setSidebarOpen(false)}>
+            <Link
+              to="/"
+              className="px-5 py-3 border-b border-gray-100 font-medium hover:bg-yellow-50 transition-colors"
+              onClick={() => setSidebarOpen(false)}
+            >
               Home
             </Link>
             <div className="border-b border-gray-100">
               <button
                 className="w-full flex justify-between items-center px-5 py-3 text-left hover:bg-yellow-50 transition-colors"
-                onClick={() => toggleMobileDropdown('courses')}
+                onClick={() => toggleMobileDropdown("courses")}
               >
                 <span className="font-medium">All Courses</span>
-                {openMobileDropdown === 'courses' ? <FaChevronUp className="text-xs text-gray-500" /> : <FaChevronDown className="text-xs text-gray-500" />}
+                {openMobileDropdown === "courses" ? (
+                  <FaChevronUp className="text-xs text-gray-500" />
+                ) : (
+                  <FaChevronDown className="text-xs text-gray-500" />
+                )}
               </button>
-              {openMobileDropdown === 'courses' && (
+              {openMobileDropdown === "courses" && (
                 <div className="ml-6 py-1 space-y-1">
                   {categoriesMenuItems.map((item) => (
                     <Link
@@ -581,12 +655,16 @@ backgroundRepeat: "repeat"
             <div className="border-b border-gray-100">
               <button
                 className="w-full flex justify-between items-center px-5 py-3 text-left hover:bg-yellow-50 transition-colors"
-                onClick={() => toggleMobileDropdown('about')}
+                onClick={() => toggleMobileDropdown("about")}
               >
                 <span className="font-medium">About Us</span>
-                {openMobileDropdown === 'about' ? <FaChevronUp className="text-xs text-gray-500" /> : <FaChevronDown className="text-xs text-gray-500" />}
+                {openMobileDropdown === "about" ? (
+                  <FaChevronUp className="text-xs text-gray-500" />
+                ) : (
+                  <FaChevronDown className="text-xs text-gray-500" />
+                )}
               </button>
-              {openMobileDropdown === 'about' && (
+              {openMobileDropdown === "about" && (
                 <div className="ml-6 py-1 space-y-1">
                   {aboutMenuItems.map((item) => (
                     <Link
@@ -604,12 +682,16 @@ backgroundRepeat: "repeat"
             <div className="border-b border-gray-100">
               <button
                 className="w-full flex justify-between items-center px-5 py-3 text-left hover:bg-yellow-50 transition-colors"
-                onClick={() => toggleMobileDropdown('services')}
+                onClick={() => toggleMobileDropdown("services")}
               >
                 <span className="font-medium">Our Services</span>
-                {openMobileDropdown === 'services' ? <FaChevronUp className="text-xs text-gray-500" /> : <FaChevronDown className="text-xs text-gray-500" />}
+                {openMobileDropdown === "services" ? (
+                  <FaChevronUp className="text-xs text-gray-500" />
+                ) : (
+                  <FaChevronDown className="text-xs text-gray-500" />
+                )}
               </button>
-              {openMobileDropdown === 'services' && (
+              {openMobileDropdown === "services" && (
                 <div className="ml-6 py-1 space-y-1">
                   {servicesMenuItems.map((item) => (
                     <Link
@@ -667,29 +749,62 @@ backgroundRepeat: "repeat"
               <p className="text-sm font-medium">contact@refermegroup.com</p>
             </div>
           </div>
-
-        
         </div>
         <div className="absolute bottom-0 left-0 right-0 p-4 bg-gray-50 border-t">
           <div className="flex justify-center gap-3">
-            <div className="bg-blue-600 p-1.5 text-sm rounded-full text-white hover:opacity-90 transition-opacity">
+            <Link
+              to="https://www.facebook.com/refermegroup.qa"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-blue-600 p-1.5 text-sm rounded-full text-white hover:opacity-90 transition-opacity"
+            >
               <FaFacebook />
-            </div>
-            <div className="bg-gradient-to-tr from-pink-600 to-amber-500 p-1.5 text-sm rounded-full text-white hover:opacity-90 transition-opacity">
+            </Link>
+
+            <Link
+              to="https://www.instagram.com/refermegroup/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-gradient-to-tr from-pink-600 to-amber-500 p-1.5 text-sm rounded-full text-white hover:opacity-90 transition-opacity"
+            >
               <FaInstagram />
-            </div>
-            <div className="bg-blue-700 p-1.5 text-sm rounded-full text-white hover:opacity-90 transition-opacity">
+            </Link>
+
+            <Link
+              to="https://www.linkedin.com/company/refermegroup/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-blue-700 p-1.5 text-sm rounded-full text-white hover:opacity-90 transition-opacity"
+            >
               <FaLinkedin />
-            </div>
-            <div className="bg-sky-500 p-1.5 text-sm rounded-full text-white hover:opacity-90 transition-opacity">
+            </Link>
+
+            <Link
+              to="https://twitter.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-sky-500 p-1.5 text-sm rounded-full text-white hover:opacity-90 transition-opacity"
+            >
               <FaTwitter />
-            </div>
-            <div className="bg-red-600 p-1.5 text-sm rounded-full text-white hover:opacity-90 transition-opacity">
+            </Link>
+
+            <Link
+              to="https://youtube.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-red-600 p-1.5 text-sm rounded-full text-white hover:opacity-90 transition-opacity"
+            >
               <FaYoutube />
-            </div>
-            <div className="bg-green-500 p-1.5 text-sm rounded-full text-white hover:opacity-90 transition-opacity">
+            </Link>
+
+            <Link
+              to="https://wa.me/yourNumber" // Replace with actual number or link
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-green-500 p-1.5 text-sm rounded-full text-white hover:opacity-90 transition-opacity"
+            >
               <FaWhatsapp />
-            </div>
+            </Link>
           </div>
         </div>
       </div>

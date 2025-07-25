@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 function HeroSection() {
   return (
@@ -20,7 +20,8 @@ function HeroSection() {
               Your Career Training Marketplace
             </h1>
             <p className="text-gray-600 mb-6">
-              Search among hundreds of live, virtual and online training courses.
+              Search among hundreds of live, virtual and online training
+              courses.
             </p>
 
             {/* Search Bar */}
@@ -42,24 +43,41 @@ function HeroSection() {
                   Training Methods
                 </h3>
                 <ul className="text-blue-700 space-y-2 list-disc pl-5">
-                  <li className="hover:text-blue-800 transition-colors duration-200">Virtual Live Training</li>
-                  <li className="hover:text-blue-800 transition-colors duration-200">eLearning Courses</li>
-                  <li className="hover:text-blue-800 transition-colors duration-200">In-Person On-Site Training</li>
-
+                  <li className="hover:text-blue-800 transition-colors duration-200">
+                    Virtual Live Training
+                  </li>
+                  <li className="hover:text-blue-800 transition-colors duration-200">
+                    eLearning Courses
+                  </li>
+                  <li className="hover:text-blue-800 transition-colors duration-200">
+                    In-Person On-Site Training
+                  </li>
                 </ul>
               </div>
               <div className="flex-1 grid grid-cols-3 gap-4 md:gap-6">
                 <div className="text-center p-6 rounded-lg transition-all duration-300 hover:bg-blue-50 hover:shadow-md">
-                  <p className="text-4xl font-extrabold text-blue-700 animate-pulse-once">1200+</p>
-                  <p className="text-gray-700 mt-2 font-medium">Trained Corporates</p>
+                  <p className="text-4xl font-extrabold text-blue-700 animate-pulse-once">
+                    1200+
+                  </p>
+                  <p className="text-gray-700 mt-2 font-medium">
+                    Trained Corporates
+                  </p>
                 </div>
                 <div className="text-center p-6 rounded-lg transition-all duration-300 hover:bg-blue-50 hover:shadow-md">
-                  <p className="text-4xl font-extrabold text-blue-700 animate-pulse-once">12+</p>
-                  <p className="text-gray-700 mt-2 font-medium">Courses & Videos</p>
+                  <p className="text-4xl font-extrabold text-blue-700 animate-pulse-once">
+                    15+
+                  </p>
+                  <p className="text-gray-700 mt-2 font-medium">
+                    Courses & Videos
+                  </p>
                 </div>
                 <div className="text-center p-6 rounded-lg transition-all duration-300 hover:bg-blue-50 hover:shadow-md">
-                  <p className="text-4xl font-extrabold text-blue-700 animate-pulse-once">12K+</p>
-                  <p className="text-gray-700 mt-2 font-medium">Training Hours</p>
+                  <p className="text-4xl font-extrabold text-blue-700 animate-pulse-once">
+                    12K+
+                  </p>
+                  <p className="text-gray-700 mt-2 font-medium">
+                    Training Hours
+                  </p>
                 </div>
               </div>
             </div>
@@ -67,10 +85,9 @@ function HeroSection() {
         </div>
       </section>
 
-      {/* <img src="src/assets/banners/Banner-1.png" alt="" /> - wrong method import src image */} 
-      <img src="/assets/banners/Banner-1.png" alt="" className='w-full' /> 
+      {/* <img src="src/assets/banners/Banner-1.png" alt="" /> - wrong method import src image */}
+      <img src="/assets/banners/Banner-1.png" alt="" className="w-full" />
     </>
-
   );
 }
 

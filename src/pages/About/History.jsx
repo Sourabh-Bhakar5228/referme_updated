@@ -47,16 +47,15 @@ const History = () => {
     },
     community: {
       name: "Referme-ians",
-      telegram: "5 Telegram Groups with 10,000+ Professionals",
-      whatsapp: "5 WhatsApp Channel with 8,000+ Professionals",
-      linkedInGroups: "5 LinkedIn Groups with 11,000+ Professionals",
-      facebookFollowers: "117,000+ Facebook Page Followers",
-      linkedInGroupPageFollowers:
-        "6,800+ Followers on LinkedIn Refer Me Group page",
-      twitterFollowers: "100+ Followers on X (Twitter)",
+      telegram: "5 Telegram Groups with 6,059 Professionals",
+      whatsapp: "30 WhatsApp Groups/Channel with 33,000+ Professionals",
+      linkedInGroups: "5 LinkedIn Groups/Page with 20,090 Professionals",
+      facebookFollowers: "12,240 Professionals (refermegroup.qa)",
+      linkedInGroupPageFollowers: "1,11,186 Profiles on LinkedIn",
+      twitterFollowers: "101 Followers on X (Twitter)",
       quoraFollowers: "150+ Followers on Quora",
-      linkedInTotalFollowers: "90,000+ Followers on LinkedIn", // Clarified this might be total company page followers
-      otherPlatforms: "25,000+ Professionals on other platforms",
+      linkedInTotalFollowers: "1,11,186+ Followers on LinkedIn", // Updated based on total profiles
+      otherPlatforms: "15,000+ Professionals on other platforms",
     },
     whatWeDo: {
       dailyJobs: "200+ Jobs",
@@ -70,7 +69,6 @@ const History = () => {
     },
     whyUs: [
       "Life Time Job Assistance",
-      "Transparent Policies", // ✅ Updated from "Money Back Policy"
       "Referral Program",
       "Life Time Recording",
       "Direct Interaction with Trainers & Students",
@@ -82,7 +80,6 @@ const History = () => {
       "LinkedIn Service",
       "Exclusive Network",
       "Support Professional having no Job/Financial Chalenge",
-      "Got Jobs", // ✅ Updated from "Get Job"
     ],
   };
 
