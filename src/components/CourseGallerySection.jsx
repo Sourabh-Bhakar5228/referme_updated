@@ -38,7 +38,7 @@ const CourseGallerySection = () => {
           FIND THE COURSE RIGHT FOR YOUR GOALS
         </h2>
         <h3 className="text-5xl font-extrabold text-gray-900 tracking-tight">
-          Explore Over <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">20+ Courses</span>
+          Explore Over <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">15+Courses</span>
         </h3>
       </motion.div>
 

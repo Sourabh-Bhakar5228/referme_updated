@@ -204,94 +204,122 @@ const Footer = () => {
       </li>
     ));
 
-  
-  
-   return (
+  return (
     <>
       <footer className="bg-gradient-to-br from-gray-900 via-indigo-900 to-purple-900 text-gray-200 border-t-4 border-orange-500">
         {/* ===== First Footer Section ===== */}
-        <div className={`max-w-full mx-auto px-4 ${isTablet ? 'px-6' : 'px-12'} py-8 grid grid-cols-1 ${isTablet ? 'md:grid-cols-3' : 'md:grid-cols-6'} gap-6`}>
+        <div
+          className={`max-w-full mx-auto px-4 ${
+            isTablet ? "px-6" : "px-12"
+          } py-8 grid grid-cols-1 ${
+            isTablet ? "md:grid-cols-3" : "md:grid-cols-6"
+          } gap-6`}
+        >
           {/* Logo & Description - Full width on mobile, 1 column on tablet/desktop */}
-          <div className={`${isTablet ? 'md:col-span-1' : ''}`}>
+          <div className={`${isTablet ? "md:col-span-1" : ""}`}>
             <div className="mb-4">
-              <Link to="/" className="focus:outline-none focus:ring-2 focus:ring-yellow-400 rounded">
-                <img 
-                  src={'/assets/logo/rmg-logo.png'} 
-                  className={`${isTablet ? 'w-32' : 'w-36'}`} 
-                  alt="Refer Me Group Logo" 
+              <Link
+                to="/"
+                className="focus:outline-none focus:ring-2 focus:ring-yellow-400 rounded"
+              >
+                <img
+                  src={"/assets/logo/rmg-logo.png"}
+                  className={`${isTablet ? "w-32" : "w-36"}`}
+                  alt="Refer Me Group Logo"
                 />
               </Link>
             </div>
-            <p className={`${isTablet ? 'text-xs' : 'text-sm'} leading-relaxed text-gray-300`}>
-            We are dedicated to facilitating career advancement and fostering professional development. With a wealth of resources and initiatives, we strive to empower individuals at every stage of their journey.
+            <p
+              className={`${
+                isTablet ? "text-xs" : "text-sm"
+              } leading-relaxed text-gray-300`}
+            >
+              We are dedicated to facilitating career advancement and fostering
+              professional development. With a wealth of resources and
+              initiatives, we strive to empower individuals at every stage of
+              their journey.
             </p>
             <div className="flex space-x-4 mt-4">
-              {[FiFacebook, FiTwitter, FiLinkedin, FiInstagram].map((Icon, index) => (
-                <a 
-                  key={index} 
-                  href="#" 
-                  className="text-gray-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-yellow-400 rounded-full p-1"
-                  aria-label={['Facebook', 'Twitter', 'LinkedIn', 'Instagram'][index]}
-                >
-                  <Icon className={`${isTablet ? 'w-4 h-4' : 'w-5 h-5'}`} />
-                </a>
-              ))}
+              {[FiFacebook, FiTwitter, FiLinkedin, FiInstagram].map(
+                (Icon, index) => (
+                  <a
+                    key={index}
+                    href="#"
+                    className="text-gray-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-yellow-400 rounded-full p-1"
+                    aria-label={
+                      ["Facebook", "Twitter", "LinkedIn", "Instagram"][index]
+                    }
+                  >
+                    <Icon className={`${isTablet ? "w-4 h-4" : "w-5 h-5"}`} />
+                  </a>
+                )
+              )}
             </div>
           </div>
 
           {/* Quick Links - Full width on mobile, 1 column on tablet/desktop */}
           <div>
-            <h3 className="text-white font-semibold mb-4 text-lg md:text-xl">Quick Links</h3>
+            <h3 className="text-white font-semibold mb-4 text-lg md:text-xl">
+              Quick Links
+            </h3>
             <ul className="space-y-2">{renderList(quickLinks)}</ul>
           </div>
 
           {/* Top Courses - Full width on mobile, 2 columns on tablet (spanning 2 cols), 3 columns on desktop (spanning 3 cols) */}
-          <div className={`${isTablet ? 'md:col-span-2' : 'md:col-span-3'}`}>
-            <h3 className="text-white font-semibold mb-4 text-lg md:text-xl">Top Courses</h3>
-            <div className={`grid ${isTablet ? 'grid-cols-3' : 'grid-cols-3'} gap-4`}>
+          <div className={`${isTablet ? "md:col-span-2" : "md:col-span-3"}`}>
+            <h3 className="text-white font-semibold mb-4 text-lg md:text-xl">
+              Top Courses
+            </h3>
+            <div
+              className={`grid ${
+                isTablet ? "grid-cols-3" : "grid-cols-3"
+              } gap-4`}
+            >
               {/* First column */}
-              <ul className="space-y-2">
-                {renderList(courses.slice(0, 7))}
-              </ul>
-              
+              <ul className="space-y-2">{renderList(courses.slice(0, 7))}</ul>
+
               {/* Second column */}
-              <ul className="space-y-2">
-                {renderList(courses.slice(7, 14))}
-              </ul>
-              
+              <ul className="space-y-2">{renderList(courses.slice(7, 14))}</ul>
+
               {/* Third column - visible on both tablet and desktop */}
-              <ul className="space-y-2">
-                {renderList(courses.slice(14, 21))}
-              </ul>
+              <ul className="space-y-2">{renderList(courses.slice(14, 21))}</ul>
             </div>
           </div>
 
           {/* Contact Info - Full width on mobile, 1 column on tablet/desktop */}
           <div>
-            <h3 className="text-white font-semibold mb-4 text-lg md:text-xl">Contact Us</h3>
+            <h3 className="text-white font-semibold mb-4 text-lg md:text-xl">
+              Contact Us
+            </h3>
             <ul className="space-y-4 text-gray-300">
               <li className="flex items-start gap-3">
                 <FiMapPin className="text-indigo-400 mt-1 flex-shrink-0" />
-                <span className={`${isTablet ? 'text-xs' : 'text-sm'}`}>
-                  Refer Me Group<br />
-                  B-225, Aditya Park Town,<br />
+                <span className={`${isTablet ? "text-xs" : "text-sm"}`}>
+                  Refer Me Group
+                  <br />
+                  B-225, Aditya Park Town,
+                  <br />
                   Ghaziabad (UP) 201002
                 </span>
               </li>
               <li className="flex items-center gap-3">
                 <FiMail className="text-indigo-400 flex-shrink-0" />
-                <a 
-                  href="mailto:contact@refermegroup.com" 
-                  className={`hover:text-white focus:outline-none focus:underline ${isTablet ? 'text-xs' : 'text-sm'}`}
+                <a
+                  href="mailto:contact@refermegroup.com"
+                  className={`hover:text-white focus:outline-none focus:underline ${
+                    isTablet ? "text-xs" : "text-sm"
+                  }`}
                 >
                   contact@refermegroup.com
                 </a>
               </li>
               <li className="flex items-center gap-3">
                 <FiPhone className="text-indigo-400 flex-shrink-0" />
-                <a 
-                  href="tel:+917678573511" 
-                  className={`hover:text-white focus:outline-none focus:underline ${isTablet ? 'text-xs' : 'text-sm'}`}
+                <a
+                  href="tel:+917678573511"
+                  className={`hover:text-white focus:outline-none focus:underline ${
+                    isTablet ? "text-xs" : "text-sm"
+                  }`}
                 >
                   +91 76785 73511
                 </a>
@@ -301,13 +329,22 @@ const Footer = () => {
         </div>
 
         {/* Bottom Bar */}
-        <div className={`border-t border-indigo-700 py-4 text-center ${isTablet ? 'text-xs' : 'text-sm'} text-gray-400 flex flex-col ${isTablet ? 'md:flex-row' : 'md:flex-row'} justify-between items-center gap-2 px-4`}>
+        <div
+          className={`border-t border-indigo-700 py-4 text-center ${
+            isTablet ? "text-xs" : "text-sm"
+          } text-gray-400 flex flex-col ${
+            isTablet ? "md:flex-row" : "md:flex-row"
+          } justify-between items-center gap-2 px-4`}
+        >
           <div>
-            <p>© {new Date().getFullYear()} All Copyrights Reserved by Refer Me Group</p>
+            <p>
+              © {new Date().getFullYear()} All Copyrights Reserved by Refer Me
+              Group
+            </p>
           </div>
           <div>
             <p>
-              Designed & Developed By{' '}
+              Designed & Developed By{" "}
               <a
                 href="https://www.jaikviktechnology.com"
                 className="text-indigo-400 hover:underline focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:rounded"
@@ -322,9 +359,6 @@ const Footer = () => {
       </footer>
     </>
   );
-  
-  
-   
 };
 
 export default Footer;

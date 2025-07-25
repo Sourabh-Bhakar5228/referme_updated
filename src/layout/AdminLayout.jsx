@@ -1,4 +1,10 @@
-import { Outlet, Link, useLocation, Navigate } from "react-router-dom";
+import {
+  Outlet,
+  Link,
+  useLocation,
+  Navigate,
+  useNavigate,
+} from "react-router-dom";
 import {
   FiHome,
   FiUsers,
@@ -11,29 +17,42 @@ import {
   FiChevronRight,
   FiMessageSquare,
   FiHelpCircle,
+  FiBookOpen,
+  FiUserCheck,
 } from "react-icons/fi";
 import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+// Optional: If you want to decode token
+// import jwt_decode from "jwt-decode";
 
 const AdminLayout = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const [unreadNotifications, setUnreadNotifications] = useState(3);
 
-  const token = useMemo(() => {
-    const token = JSON.parse(localStorage.getItem("token"));
-    return token;
-  }, [location]);
+  const token = useMemo(() => localStorage.getItem("token"), [location]);
+
+  // Optional JWT Decode & Expiry Check
+  // const user = useMemo(() => {
+  //   if (!token) return null;
+  //   try {
+  //     const decoded = jwt_decode(token);
+  //     if (decoded.exp * 1000 < Date.now()) {
+  //       localStorage.removeItem("token");
+  //       return null;
+  //     }
+  //     return decoded;
+  //   } catch (err) {
+  //     return null;
+  //   }
+  // }, [token]);
 
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 1024);
-      if (window.innerWidth < 1024) {
-        setIsSidebarOpen(false);
-      } else {
-        setIsSidebarOpen(true);
-      }
+      setIsSidebarOpen(window.innerWidth >= 1024);
     };
 
     handleResize();
@@ -43,18 +62,22 @@ const AdminLayout = () => {
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
+
   const navItems = [
     { to: "/admin", icon: FiHome, label: "Dashboard" },
     { to: "/admin/users", icon: FiUsers, label: "Users" },
-    { to: "/admin/blogs", icon: FiUsers, label: "Blogs" },
-    { to: "/admin/enrolled", icon: FiUsers, label: "Users Enrolled" },
+    { to: "/admin/blogs", icon: FiBookOpen, label: "Blogs" },
+    { to: "/admin/enrolled", icon: FiUserCheck, label: "Users Enrolled" },
     { to: "/admin/courses", icon: FiBook, label: "Courses" },
     { to: "/admin/analytics", icon: FiBarChart2, label: "Analytics" },
     { to: "/admin/settings", icon: FiSettings, label: "Settings" },
   ];
 
-  return (
-    token ?
+  return token ? (
     <div className="flex min-h-screen bg-gradient-to-br from-gray-50 to-indigo-50">
       {/* Sidebar */}
       <motion.aside
@@ -72,18 +95,6 @@ const AdminLayout = () => {
               alt="Refer Me Group"
               className={`${isSidebarOpen ? "h-10" : "h-8"} transition-all`}
             />
-            <AnimatePresence>
-              {/* {isSidebarOpen && (
-                // <motion.h1 
-                //   initial={{ opacity: 0, x: -20 }}
-                //   animate={{ opacity: 1, x: 0 }}
-                //   exit={{ opacity: 0, x: -20 }}
-                //   className="text-xl font-bold text-gray-800 whitespace-nowrap"
-                // >
-                //   Refer Me Group
-                // </motion.h1>
-              )} */}
-            </AnimatePresence>
           </div>
           <button
             className="lg:hidden text-gray-600 hover:text-indigo-600 p-1"
@@ -171,7 +182,10 @@ const AdminLayout = () => {
                 )}
               </AnimatePresence>
             </button>
-            <button className="flex items-center space-x-3 p-3 rounded-xl text-gray-600 hover:bg-indigo-50 hover:text-indigo-600 w-full transition-all group">
+            <button
+              onClick={handleLogout}
+              className="flex items-center space-x-3 p-3 rounded-xl text-gray-600 hover:bg-indigo-50 hover:text-indigo-600 w-full transition-all group"
+            >
               <FiLogOut className="text-lg text-indigo-500 group-hover:text-indigo-600" />
               <AnimatePresence>
                 {isSidebarOpen && (
@@ -199,7 +213,7 @@ const AdminLayout = () => {
       )}
 
       {/* Main Content */}
-      <div className={`flex-1 overflow-auto transition-all duration-300 `}>
+      <div className={`flex-1 overflow-auto transition-all duration-300`}>
         <header className="bg-white shadow-sm p-4 flex justify-between items-center sticky top-0 z-10">
           <div className="flex items-center space-x-4">
             <button
@@ -259,7 +273,8 @@ const AdminLayout = () => {
         </main>
       </div>
     </div>
-    : <Navigate to={"/login"} />
+  ) : (
+    <Navigate to="/login" />
   );
 };
 
