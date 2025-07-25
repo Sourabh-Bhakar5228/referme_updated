@@ -17,7 +17,7 @@ import CoreComitee from "../pages/About/CoreComitee";
 import Freelancing from "../pages/Services/Freelancing";
 import PartnershipPrograms from "../pages/Services/PartnershipPrograms";
 import LogIn from "../pages/Login";
-import SignUp from "../pages/SignUp";
+import SignUp from "../pages/Signup";
 import AdminLayout from "../layout/AdminLayout";
 import Dashboard from "../admin/dashboard/Dashboard";
 import AdminProducts from "../admin/products/AdminProducts";
