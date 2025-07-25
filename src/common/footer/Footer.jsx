@@ -240,20 +240,33 @@ const Footer = () => {
               their journey.
             </p>
             <div className="flex space-x-4 mt-4">
-              {[FiFacebook, FiTwitter, FiLinkedin, FiInstagram].map(
-                (Icon, index) => (
-                  <a
-                    key={index}
-                    href="#"
-                    className="text-gray-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-yellow-400 rounded-full p-1"
-                    aria-label={
-                      ["Facebook", "Twitter", "LinkedIn", "Instagram"][index]
-                    }
-                  >
-                    <Icon className={`${isTablet ? "w-4 h-4" : "w-5 h-5"}`} />
-                  </a>
-                )
-              )}
+              {[
+                {
+                  Icon: FiFacebook,
+                  link: "https://www.facebook.com/refermegroup.qa",
+                },
+                { Icon: FiTwitter, link: "https://www.twitter.com" },
+                {
+                  Icon: FiLinkedin,
+                  link: "https://www.linkedin.com/company/refermegroup/",
+                },
+                {
+                  Icon: FiInstagram,
+                  link: "https://www.instagram.com/refermegroup/",
+                },
+              ].map(({ Icon, link }, index) => (
+                <Link
+                  key={index}
+                  to={link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={
+                    ["Facebook", "Twitter", "LinkedIn", "Instagram"][index]
+                  }
+                >
+                  <Icon className={`${isTablet ? "w-4 h-4" : "w-5 h-5"}`} />
+                </Link>
+              ))}
             </div>
           </div>
 
