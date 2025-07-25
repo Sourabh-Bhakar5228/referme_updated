@@ -3,6 +3,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
+import { Link } from "react-router-dom";
 
 const TestimonialSection = () => {
   const swiperRef = useRef(null);
@@ -243,17 +244,14 @@ const TestimonialSection = () => {
 
             {/* CTA to Google Reviews */}
             <div className="mt-10 text-center">
-              <p className="text-gray-700 text-lg mb-4">
-                Want to read more real feedback from our learners?
-              </p>
-              <a
-                href="https://www.google.com/search?sca_esv=d590ad2ae697755e&rlz=1C1ONGR_en-GBIN1148IN1148&sxsrf=AE3TifPb4wc0625VeA5kBIcbAykrMpg9Vw:1753435184562&si=AMgyJEtREmoPL4P1I5IDCfuA8gybfVI2d5Uj7QMwYCZHKDZ-Ez-V2u6BC5V0Bq_f1p5sHFU4e105h9cv8zOuIuEpferRhpk25EQ606khm9z0wqT1ocFn1MQv5IXtLtEzDzRs_s1hGyZo&q=Refer+Me+Group+Reviews&sa=X&ved=2ahUKEwj-4r-K19eOAxVG3TgGHTb_Fb4Q0bkNegQIIhAE&biw=1536&bih=742&dpr=1.25"
+              <Link
+                to="https://www.google.com/search?sca_esv=d590ad2ae697755e&rlz=1C1ONGR_en-GBIN1148IN1148&sxsrf=AE3TifPb4wc0625VeA5kBIcbAykrMpg9Vw:1753435184562&si=AMgyJEtREmoPL4P1I5IDCfuA8gybfVI2d5Uj7QMwYCZHKDZ-Ez-V2u6BC5V0Bq_f1p5sHFU4e105h9cv8zOuIuEpferRhpk25EQ606khm9z0wqT1ocFn1MQv5IXtLtEzDzRs_s1hGyZo&q=Refer+Me+Group+Reviews&sa=X&ved=2ahUKEwj-4r-K19eOAxVG3TgGHTb_Fb4Q0bkNegQIIhAE&biw=1536&bih=742&dpr=1.25"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-all shadow-md"
               >
                 View More Reviews on Google
-              </a>
+              </Link>
             </div>
           </div>
         </div>
