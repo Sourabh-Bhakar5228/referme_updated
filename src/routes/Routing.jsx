@@ -16,8 +16,8 @@ import WhatWeDo from "../pages/About/WhatWeDo";
 import CoreComitee from "../pages/About/CoreComitee";
 import Freelancing from "../pages/Services/Freelancing";
 import PartnershipPrograms from "../pages/Services/PartnershipPrograms";
-import Login from "../pages/Login";
-import Signup from "../pages/SignUp";
+import LogIn from "../pages/Login";
+import SignUp from "../pages/SignUp";
 import AdminLayout from "../layout/AdminLayout";
 import Dashboard from "../admin/dashboard/Dashboard";
 import AdminProducts from "../admin/products/AdminProducts";
@@ -33,8 +33,8 @@ import Blog7 from "../pages/Blogs/Blog7";
 import Blog8 from "../pages/Blogs/Blog8";
 import AddBlog from "../admin/blogs/AddBlog";
 import EditBlog from "../admin/blogs/EditBlog";
-import Webinars from "../pages/Services/Webinars"
-import courses from "../data/courses";
+import Webinars from "../pages/Services/Webinars";
+// import courses from "../data/courses";
 import WebinarDetail from "../pages/Services/WebinarDetail";
 import Studentdashboard from "../admin/dashboard/Studentdashboard";
 
@@ -62,9 +62,9 @@ const router = createBrowserRouter([
         path: "services",
         children: [
           { path: "webinars", element: <Webinars /> },
-     
-          { path: "partnership-programs", element: <PartnershipPrograms/> },
-            { path: "freelancing", element: <Freelancing/> },
+
+          { path: "partnership-programs", element: <PartnershipPrograms /> },
+          { path: "freelancing", element: <Freelancing /> },
         ],
       },
       { path: "/webinars/:id", element: <WebinarDetail /> },
@@ -75,19 +75,25 @@ const router = createBrowserRouter([
           { path: "The-Future-of-Data-Science", element: <Blog1 /> },
           { path: "Mastering-Agile", element: <Blog2 /> },
           { path: "Azure-DevOps-vs-AWS", element: <Blog3 /> },
-          { path: "Automation-Testing-with-Selenium-and-AI", element: <Blog4 /> },
-          {path:"Business-Analysis-in-the-Digital-Age", element: <Blog5/>}  ,
-          {path:"Power-Automate-for-Beginners", element: <Blog6/>} ,
-          {path:"Core-Java-Concepts-Every-Developer-Should-Master", element: <Blog7/>} ,
-          {path:"Digital-Marketing-Strategies-for-2024", element: <Blog8/>}  
+          {
+            path: "Automation-Testing-with-Selenium-and-AI",
+            element: <Blog4 />,
+          },
+          { path: "Business-Analysis-in-the-Digital-Age", element: <Blog5 /> },
+          { path: "Power-Automate-for-Beginners", element: <Blog6 /> },
+          {
+            path: "Core-Java-Concepts-Every-Developer-Should-Master",
+            element: <Blog7 />,
+          },
+          { path: "Digital-Marketing-Strategies-for-2024", element: <Blog8 /> },
           // future blogs: path: "2", element: <Blog2 />
         ],
       },
 
       { path: "contact", element: <ContactUs /> },
       { path: "career", element: <Careers /> },
-      { path: "login", element: <Login /> },
-       { path: "signup", element: <Signup/> },
+      { path: "login", element: <LogIn /> },
+      { path: "signup", element: <SignUp /> },
       { path: "courses/:courseId", element: <CourseDetail /> },
     ],
   },
@@ -100,10 +106,12 @@ const router = createBrowserRouter([
       { path: "products", element: <AdminProducts /> },
       { path: "blogs", element: <AdminBlogs /> },
       {
-        path:"addBlog" , element: <AddBlog/>
+        path: "addBlog",
+        element: <AddBlog />,
       },
       {
-        path:"editBlog" , element: <EditBlog />
+        path: "editBlog",
+        element: <EditBlog />,
       },
       { path: "*", element: <h2>Admin 404 page!</h2> },
     ],
@@ -114,7 +122,7 @@ const router = createBrowserRouter([
     element: <AdminLayout />,
     children: [
       { index: true, element: <Studentdashboard /> },
-      
+
       { path: "*", element: <h2>Admin 404 page!</h2> },
     ],
   },
