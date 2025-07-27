@@ -284,14 +284,12 @@ const Webinars = () => {
                 </h3>
                 <div className="space-y-6">
                   <div>
-                    <p className="text-4xl font-bold text-blue-600 mb-1">
-                      2,500+
-                    </p>
+                    <p className="text-4xl font-bold text-blue-600 mb-1">50+</p>
                     <p className="text-gray-600">Webinars conducted</p>
                   </div>
                   <div>
                     <p className="text-4xl font-bold text-blue-600 mb-1">
-                      110,000+
+                      900+
                     </p>
                     <p className="text-gray-600">Learners served</p>
                   </div>
