@@ -798,7 +798,7 @@ export default function Navbar() {
             </Link>
 
             <Link
-              to="https://wa.me/yourNumber" // Replace with actual number or link
+              to="https://wa.me/7678573511" // Replace with actual number or link
               target="_blank"
               rel="noopener noreferrer"
               className="bg-green-500 p-1.5 text-sm rounded-full text-white hover:opacity-90 transition-opacity"
