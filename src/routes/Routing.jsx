@@ -19,6 +19,7 @@ import PaymentPolicy from "../pages/About/PaymentPolicy";
 import WhatWeDo from "../pages/About/WhatWeDo";
 import CoreComitee from "../pages/About/CoreComitee";
 import Freelancing from "../pages/Services/Freelancing";
+import ManthanPage from "../pages/Services/ManthanPage";
 import PartnershipPrograms from "../pages/Services/PartnershipPrograms";
 import AdLogin from "../admin/admin_Login_page/AdLogin";
 // import SignUp from "../pages/Signup";
@@ -90,6 +91,7 @@ const router = createBrowserRouter([
         path: "services",
         children: [
           { path: "webinars", element: <Webinars /> },
+          { path: "manthan", element: <ManthanPage /> },
           { path: "partnership-programs", element: <PartnershipPrograms /> },
           { path: "freelancing", element: <Freelancing /> },
         ],

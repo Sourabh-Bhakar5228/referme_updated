@@ -226,6 +226,7 @@ export default function Navbar() {
 
   const servicesMenuItems = [
     { key: "1", label: "Webinars", path: "/services/webinars" },
+    { key: "4", label: "Manthan", path: "/services/manthan" },
     {
       key: "2",
       label: "Partnership Programs",
