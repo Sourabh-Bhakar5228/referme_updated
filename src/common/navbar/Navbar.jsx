@@ -796,15 +796,14 @@ export default function Navbar() {
             >
               <FaYoutube />
             </Link>
-
-            <Link
-              to="https://wa.me/7678573511" // Replace with actual number or link
+            <a
+              href="https://wa.me/917678573511" // ✅ Must start with https://
               target="_blank"
               rel="noopener noreferrer"
               className="bg-green-500 p-1.5 text-sm rounded-full text-white hover:opacity-90 transition-opacity"
             >
               <FaWhatsapp />
-            </Link>
+            </a>
           </div>
         </div>
       </div>

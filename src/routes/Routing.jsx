@@ -1,6 +1,10 @@
 // src/routes/Routing.jsx
 import React from "react";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Navigate,
+} from "react-router-dom";
 
 import AppLayout from "../layout/AppLayout";
 import Home from "../pages/Home/Home";
@@ -16,8 +20,8 @@ import WhatWeDo from "../pages/About/WhatWeDo";
 import CoreComitee from "../pages/About/CoreComitee";
 import Freelancing from "../pages/Services/Freelancing";
 import PartnershipPrograms from "../pages/Services/PartnershipPrograms";
-import LogIn from "../pages/Login";
-import SignUp from "../pages/Signup";
+import LogIn from "../admin/adminLogin/AdminLogin";
+// import SignUp from "../pages/Signup";
 import AdminLayout from "../layout/AdminLayout";
 import Dashboard from "../admin/dashboard/Dashboard";
 import AdminProducts from "../admin/products/AdminProducts";
@@ -34,9 +38,33 @@ import Blog8 from "../pages/Blogs/Blog8";
 import AddBlog from "../admin/blogs/AddBlog";
 import EditBlog from "../admin/blogs/EditBlog";
 import Webinars from "../pages/Services/Webinars";
-// import courses from "../data/courses";
 import WebinarDetail from "../pages/Services/WebinarDetail";
 import Studentdashboard from "../admin/dashboard/Studentdashboard";
+
+// Protected Route Component
+const ProtectedRoute = ({ children }) => {
+  const isAuthenticated = localStorage.getItem("isAuthenticated"); // Check authentication status
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />; // Redirect to login if not authenticated
+  }
+
+  return children;
+};
+
+// Admin Route Wrapper
+const AdminRoutes = () => (
+  <ProtectedRoute>
+    <AdminLayout />
+  </ProtectedRoute>
+);
+
+// Student Route Wrapper
+const StudentRoutes = () => (
+  <ProtectedRoute>
+    <AdminLayout />
+  </ProtectedRoute>
+);
 
 const router = createBrowserRouter([
   {
@@ -62,7 +90,6 @@ const router = createBrowserRouter([
         path: "services",
         children: [
           { path: "webinars", element: <Webinars /> },
-
           { path: "partnership-programs", element: <PartnershipPrograms /> },
           { path: "freelancing", element: <Freelancing /> },
         ],
@@ -86,21 +113,20 @@ const router = createBrowserRouter([
             element: <Blog7 />,
           },
           { path: "Digital-Marketing-Strategies-for-2024", element: <Blog8 /> },
-          // future blogs: path: "2", element: <Blog2 />
         ],
       },
 
       { path: "contact", element: <ContactUs /> },
       { path: "career", element: <Careers /> },
       { path: "login", element: <LogIn /> },
-      { path: "signup", element: <SignUp /> },
+      // { path: "signup", element: <SignUp /> },s
       { path: "courses/:courseId", element: <CourseDetail /> },
     ],
   },
 
   {
     path: "/admin",
-    element: <AdminLayout />,
+    element: <AdminRoutes />,
     children: [
       { index: true, element: <Dashboard /> },
       { path: "products", element: <AdminProducts /> },
@@ -119,10 +145,9 @@ const router = createBrowserRouter([
 
   {
     path: "/student",
-    element: <AdminLayout />,
+    element: <StudentRoutes />,
     children: [
       { index: true, element: <Studentdashboard /> },
-
       { path: "*", element: <h2>Admin 404 page!</h2> },
     ],
   },

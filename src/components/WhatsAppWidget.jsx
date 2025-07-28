@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from "react";
 
 const WhatsAppWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -37,7 +37,7 @@ const WhatsAppWidget = () => {
               Click the button below to chat on WhatsApp
             </p>
             <a
-              href="https://wa.me/+91-9870287980" // Replace with your WhatsApp number
+              href="https://wa.me/917678573511"
               target="_blank"
               rel="noopener noreferrer"
               className="block bg-green-500 hover:bg-green-600 text-white text-center py-2 px-4 rounded transition duration-300"
