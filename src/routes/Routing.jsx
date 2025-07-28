@@ -20,7 +20,7 @@ import WhatWeDo from "../pages/About/WhatWeDo";
 import CoreComitee from "../pages/About/CoreComitee";
 import Freelancing from "../pages/Services/Freelancing";
 import PartnershipPrograms from "../pages/Services/PartnershipPrograms";
-import AdminLogin from "../admin/admin_Login_page/AdLogin";
+import AdLogin from "../admin/admin_Login_page/AdLogin";
 // import SignUp from "../pages/Signup";
 import AdminLayout from "../layout/AdminLayout";
 import Dashboard from "../admin/dashboard/Dashboard";
@@ -118,7 +118,7 @@ const router = createBrowserRouter([
 
       { path: "contact", element: <ContactUs /> },
       { path: "career", element: <Careers /> },
-      { path: "login", element: <AdminLogin /> },
+      { path: "login", element: <AdLogin /> },
       // { path: "signup", element: <SignUp /> },s
       { path: "courses/:courseId", element: <CourseDetail /> },
     ],
