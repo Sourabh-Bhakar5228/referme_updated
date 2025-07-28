@@ -551,7 +551,7 @@ export default function Navbar() {
               </Link>
 
               <Link
-                to="https://youtube.com"
+                to="https://www.youtube.com/@ReferMeGroupQA"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-white bg-opacity-20 p-2 rounded-full text-white hover:opacity-90 transition-opacity"
@@ -789,7 +789,7 @@ export default function Navbar() {
             </Link>
 
             <Link
-              to="https://youtube.com"
+              to="https://www.youtube.com/@ReferMeGroupQA"
               target="_blank"
               rel="noopener noreferrer"
               className="bg-red-600 p-1.5 text-sm rounded-full text-white hover:opacity-90 transition-opacity"
