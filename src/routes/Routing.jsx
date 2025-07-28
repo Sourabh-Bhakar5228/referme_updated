@@ -20,7 +20,7 @@ import WhatWeDo from "../pages/About/WhatWeDo";
 import CoreComitee from "../pages/About/CoreComitee";
 import Freelancing from "../pages/Services/Freelancing";
 import PartnershipPrograms from "../pages/Services/PartnershipPrograms";
-import LogIn from "../admin/adminLogin/AdminLogin";
+import AdminLogin from "../admin/adminLogin/AdminLogin";
 // import SignUp from "../pages/Signup";
 import AdminLayout from "../layout/AdminLayout";
 import Dashboard from "../admin/dashboard/Dashboard";
@@ -46,7 +46,7 @@ const ProtectedRoute = ({ children }) => {
   const isAuthenticated = localStorage.getItem("isAuthenticated"); // Check authentication status
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />; // Redirect to login if not authenticated
+    return <Navigate to="/login" replace />; // Redirect to AdminLogin if not authenticated
   }
 
   return children;
@@ -118,7 +118,7 @@ const router = createBrowserRouter([
 
       { path: "contact", element: <ContactUs /> },
       { path: "career", element: <Careers /> },
-      { path: "login", element: <LogIn /> },
+      { path: "login", element: <AdminLogin /> },
       // { path: "signup", element: <SignUp /> },s
       { path: "courses/:courseId", element: <CourseDetail /> },
     ],
