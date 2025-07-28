@@ -20,7 +20,7 @@ import WhatWeDo from "../pages/About/WhatWeDo";
 import CoreComitee from "../pages/About/CoreComitee";
 import Freelancing from "../pages/Services/Freelancing";
 import PartnershipPrograms from "../pages/Services/PartnershipPrograms";
-import AdminLogin from "../admin/adminLogin/AdminLogin";
+import AdminLogin from "../admin/admin_Login_page/AdminLogin";
 // import SignUp from "../pages/Signup";
 import AdminLayout from "../layout/AdminLayout";
 import Dashboard from "../admin/dashboard/Dashboard";
