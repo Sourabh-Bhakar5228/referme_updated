@@ -337,7 +337,7 @@ const ManthanPage = () => {
                   className="text-center"
                 >
                   <img
-                    src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcWJtN3Z1bW5xZ3h1b3Z5dGJ1dXZ0b2R4cGZ5dGZ4bWZqZ3BmZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o7qE1YN7aBOFPRw8E/giphy.gif"
+                    src="https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8c3R1ZHl8ZW58MHx8MHx8fDA%3D"
                     alt="Manthan Event"
                     className="rounded-lg shadow-lg max-h-72 mx-auto border-4 border-white"
                   />
@@ -357,9 +357,9 @@ const ManthanPage = () => {
             </div>
           </div>
         </div>
-
         {/* LinkedIn + Newsletter */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10 max-w-4xl mx-auto">
+          {/* LinkedIn Card */}
           <motion.div
             whileHover={{ y: -5 }}
             className="bg-white p-6 rounded-xl shadow-md border border-gray-100"
@@ -370,11 +370,17 @@ const ManthanPage = () => {
             <p className="text-gray-600 mb-4">
               Network with attendees, speakers, and industry experts.
             </p>
-            <button className="w-full flex items-center justify-center gap-3 px-6 py-3 bg-blue-700 text-white rounded-lg hover:bg-blue-800 transition-all shadow-md">
+            <a
+              href="https://www.linkedin.com/company/refermegroup/" // 🔁 Replace with actual LinkedIn group link
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full flex items-center justify-center gap-3 px-6 py-3 bg-blue-700 text-white rounded-lg hover:bg-blue-800 transition-all shadow-md"
+            >
               <FaLinkedin className="text-xl" /> Join Now
-            </button>
+            </a>
           </motion.div>
 
+          {/* Newsletter Card */}
           <motion.div
             whileHover={{ y: -5 }}
             className="bg-white p-6 rounded-xl shadow-md border border-gray-100"
@@ -383,16 +389,27 @@ const ManthanPage = () => {
             <p className="text-gray-600 mb-4">
               Subscribe for email reminders and updates.
             </p>
-            <div className="flex">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                // Add your subscription logic here
+                alert("Subscribed!");
+              }}
+              className="flex"
+            >
               <input
                 type="email"
                 placeholder="Your email"
                 className="flex-grow px-4 py-3 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                required
               />
-              <button className="px-5 py-3 bg-indigo-600 text-white rounded-r-lg hover:bg-indigo-700 transition flex items-center gap-2 shadow-md">
+              <button
+                type="submit"
+                className="px-5 py-3 bg-indigo-600 text-white rounded-r-lg hover:bg-indigo-700 transition flex items-center gap-2 shadow-md"
+              >
                 <FiMail /> Subscribe
               </button>
-            </div>
+            </form>
           </motion.div>
         </div>
       </div>
