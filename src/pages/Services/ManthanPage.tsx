@@ -337,7 +337,7 @@ const ManthanPage = () => {
                   className="text-center"
                 >
                   <img
-                    src="https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8c3R1ZHl8ZW58MHx8MHx8fDA%3D"
+                    src="https://t4.ftcdn.net/jpg/14/40/00/21/240_F_1440002126_MW5We8YPSAW1quKgclpfDvVvFzBT47bg.jpg"
                     alt="Manthan Event"
                     className="rounded-lg shadow-lg max-h-72 mx-auto border-4 border-white"
                   />

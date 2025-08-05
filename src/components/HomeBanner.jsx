@@ -1,7 +1,7 @@
-import React from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay, EffectFade, Navigation } from 'swiper/modules';
-import 'swiper/swiper-bundle.css';
+import React from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, EffectFade, Navigation } from "swiper/modules";
+import "swiper/swiper-bundle.css";
 
 // Mobile-specific slides
 const mobileSlides = [
@@ -9,29 +9,29 @@ const mobileSlides = [
     id: 1,
     title: "Mobile Summer Collection",
     subtitle: "New Arrivals 2023",
-    image: '/assets/banner-new/mobile-view-RMG1.jpg',
-    cta: "Shop Now"
+    image: "/assets/banner-new/mobile-view-RMG1.jpg",
+    cta: "Shop Now",
   },
   {
     id: 2,
     title: "Mobile Winter Special",
     subtitle: "Up to 50% Off",
     image: "/assets/banner-new/mobile-view-RMG2.jpg",
-    cta: "Discover More"
+    cta: "Discover More",
   },
   {
     id: 3,
     title: "Mobile Limited Edition",
     subtitle: "Exclusive Designs",
     image: "/assets/banner-new/mobile-view-RMG3.jpg",
-    cta: "View Collection"
+    cta: "View Collection",
   },
-   {
+  {
     id: 4,
     title: "Mobile Limited Edition",
     subtitle: "Exclusive Designs",
     image: "/assets/banner-new/mobile-view-RMG4.jpg",
-    cta: "View Collection"
+    cta: "View Collection",
   },
 ];
 
@@ -41,29 +41,29 @@ const desktopSlides = [
     id: 1,
     title: "Desktop Summer Collection",
     subtitle: "New Arrivals 2023",
-    image: '/assets/banner-new/RMG1.jpg',
-    cta: "Shop Now"
+    image: "/assets/banner-new/RMG1.jpg",
+    cta: "Shop Now",
   },
   {
     id: 2,
     title: "Desktop Winter Special",
     subtitle: "Up to 50% Off",
     image: "/assets/banner-new/RMG2.jpg",
-    cta: "Discover More"
+    cta: "Discover More",
   },
   {
     id: 3,
     title: "Desktop Limited Edition",
     subtitle: "Exclusive Designs",
     image: "/assets/banner-new/RMG3.jpg",
-    cta: "View Collection"
+    cta: "View Collection",
   },
   {
     id: 4,
     title: "Desktop Limited Edition",
     subtitle: "Exclusive Designs",
     image: "/assets/banner-new/RMG4.jpg",
-    cta: "View Collection"
+    cta: "View Collection",
   },
 ];
 
@@ -81,7 +81,7 @@ const HomeBanner = () => {
                   <Swiper
                     modules={[Autoplay, EffectFade, Navigation]}
                     spaceBetween={30}
-                    effect={'fade'}
+                    effect={"fade"}
                     loop={true}
                     autoplay={{
                       delay: 2000,
@@ -95,9 +95,9 @@ const HomeBanner = () => {
                   >
                     {mobileSlides.map((slide) => (
                       <SwiperSlide key={slide.id} className="relative">
-                        <img 
-                          src={slide.image} 
-                          alt={slide.title} 
+                        <img
+                          src={slide.image}
+                          alt={slide.title}
                           className="w-full h-full object-cover"
                         />
                       </SwiperSlide>
@@ -110,7 +110,7 @@ const HomeBanner = () => {
                   <Swiper
                     modules={[Autoplay, EffectFade, Navigation]}
                     spaceBetween={30}
-                    effect={'fade'}
+                    effect={"fade"}
                     loop={true}
                     autoplay={{
                       delay: 2000,
@@ -124,9 +124,9 @@ const HomeBanner = () => {
                   >
                     {desktopSlides.map((slide) => (
                       <SwiperSlide key={slide.id} className="relative">
-                        <img 
-                          src={slide.image} 
-                          alt={slide.title} 
+                        <img
+                          src={slide.image}
+                          alt={slide.title}
                           className="w-full h-full object-cover"
                         />
                       </SwiperSlide>
@@ -145,9 +145,12 @@ const HomeBanner = () => {
                   <div className="absolute inset-0 bg-indigo-800/70"></div>
                   <div className="relative z-10 p-4 sm:p-6 flex flex-col justify-between h-full">
                     <div>
-                      <span className="text-xs sm:text-sm font-medium">REFER ME GROUP</span>
+                      <span className="text-xs sm:text-sm font-medium">
+                        REFER ME GROUP
+                      </span>
                       <h3 className="text-base sm:text-xl md:text-2xl font-bold mt-3 uppercase tracking-wide text-center px-4 text-gray-50 shadow-lg">
-                        Because Getting Hired Should Reflect Who You Truly Are — And Who Stands Behind You.
+                        Because Getting Hired Should Reflect Who You Truly Are —
+                        And Who Stands Behind You.
                       </h3>
                     </div>
                     <button className="mt-2 sm:mt-4 px-3 sm:px-4 py-1 sm:py-2 bg-white text-blue-600 text-xs sm:text-sm font-medium rounded-full hover:bg-gray-100 transition w-fit">
@@ -162,7 +165,9 @@ const HomeBanner = () => {
                   <div className="absolute inset-0 bg-amber-700/30"></div>
                   <div className="relative z-10 p-4 sm:p-6 flex flex-col justify-between h-full">
                     <div>
-                      <span className="text-xs sm:text-sm font-medium uppercase">We’re more than a job platform</span>
+                      <span className="text-xs sm:text-sm font-medium uppercase">
+                        We’re more than a job platform
+                      </span>
                     </div>
                     <button className="mt-2 sm:mt-4 px-3 sm:px-4 py-1 sm:py-2 bg-white text-amber-600 text-xs sm:text-sm font-medium rounded-full hover:bg-gray-100 transition w-fit">
                       Discover Our Services

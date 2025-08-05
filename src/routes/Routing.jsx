@@ -1,12 +1,10 @@
-// src/routes/Routing.jsx
-import React from "react";
-import {
-  createBrowserRouter,
-  RouterProvider,
-  Navigate,
-} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
+// Layout imports
 import AppLayout from "../layout/AppLayout";
+import AdminLayout from "../layout/AdminLayout";
+
+// Public page imports
 import Home from "../pages/Home/Home";
 import About from "../pages/About/About";
 import Blogs from "../pages/Blogs/Blogs";
@@ -21,13 +19,11 @@ import CoreComitee from "../pages/About/CoreComitee";
 import Freelancing from "../pages/Services/Freelancing";
 import ManthanPage from "../pages/Services/ManthanPage";
 import PartnershipPrograms from "../pages/Services/PartnershipPrograms";
-import AdLogin from "../admin/admin_Login_page/AdLogin";
-// import SignUp from "../pages/Signup";
-import AdminLayout from "../layout/AdminLayout";
-import Dashboard from "../admin/dashboard/Dashboard";
-import AdminProducts from "../admin/products/AdminProducts";
-import AdminBlogs from "../admin/blogs/AdminBlogs";
+import Webinars from "../pages/Services/Webinars";
+import WebinarDetail from "../pages/Services/WebinarDetail";
 import CourseDetail from "../components/CourseDetail";
+
+// Blog post imports
 import Blog1 from "../pages/Blogs/Blog1";
 import Blog2 from "../pages/Blogs/Blog2";
 import Blog3 from "../pages/Blogs/Blog3";
@@ -36,44 +32,16 @@ import Blog5 from "../pages/Blogs/Blog5";
 import Blog6 from "../pages/Blogs/Blog6";
 import Blog7 from "../pages/Blogs/Blog7";
 import Blog8 from "../pages/Blogs/Blog8";
-import AddBlog from "../admin/blogs/AddBlog";
-import EditBlog from "../admin/blogs/EditBlog";
-import Webinars from "../pages/Services/Webinars";
-import WebinarDetail from "../pages/Services/WebinarDetail";
-import Studentdashboard from "../admin/dashboard/Studentdashboard";
-
-// Protected Route Component
-const ProtectedRoute = ({ children }) => {
-  const isAuthenticated = localStorage.getItem("isAuthenticated"); // Check authentication status
-
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />; // Redirect to AdminLogin if not authenticated
-  }
-
-  return children;
-};
-
-// Admin Route Wrapper
-const AdminRoutes = () => (
-  <ProtectedRoute>
-    <AdminLayout />
-  </ProtectedRoute>
-);
-
-// Student Route Wrapper
-const StudentRoutes = () => (
-  <ProtectedRoute>
-    <AdminLayout />
-  </ProtectedRoute>
-);
 
 const router = createBrowserRouter([
+  // Public routes
   {
     path: "/",
     element: <AppLayout />,
     children: [
       { index: true, element: <Home /> },
 
+      // About section
       {
         path: "about",
         children: [
@@ -87,6 +55,7 @@ const router = createBrowserRouter([
         ],
       },
 
+      // Services section
       {
         path: "services",
         children: [
@@ -97,6 +66,8 @@ const router = createBrowserRouter([
         ],
       },
       { path: "/webinars/:id", element: <WebinarDetail /> },
+
+      // Blogs section
       {
         path: "blogs",
         children: [
@@ -118,45 +89,17 @@ const router = createBrowserRouter([
         ],
       },
 
+      // Other public routes
       { path: "contact", element: <ContactUs /> },
       { path: "career", element: <Careers /> },
-      { path: "login", element: <AdLogin /> },
-      // { path: "signup", element: <SignUp /> },s
       { path: "courses/:courseId", element: <CourseDetail /> },
     ],
   },
 
-  {
-    path: "/admin",
-    element: <AdminRoutes />,
-    children: [
-      { index: true, element: <Dashboard /> },
-      { path: "products", element: <AdminProducts /> },
-      { path: "blogs", element: <AdminBlogs /> },
-      {
-        path: "addBlog",
-        element: <AddBlog />,
-      },
-      {
-        path: "editBlog",
-        element: <EditBlog />,
-      },
-      { path: "*", element: <h2>Admin 404 page!</h2> },
-    ],
-  },
-
-  {
-    path: "/student",
-    element: <StudentRoutes />,
-    children: [
-      { index: true, element: <Studentdashboard /> },
-      { path: "*", element: <h2>Admin 404 page!</h2> },
-    ],
-  },
-
+  // 404 catch-all
   {
     path: "*",
-    element: <h2>404 page!</h2>,
+    element: <h2>404 page not found!</h2>,
   },
 ]);
 

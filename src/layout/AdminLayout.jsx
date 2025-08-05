@@ -1,3 +1,4 @@
+import React, { useState, useEffect, useMemo } from "react";
 import {
   Outlet,
   Link,
@@ -20,7 +21,6 @@ import {
   FiBookOpen,
   FiUserCheck,
 } from "react-icons/fi";
-import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const AdminLayout = () => {
@@ -28,7 +28,7 @@ const AdminLayout = () => {
   const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
-  const [unreadNotifications, setUnreadNotifications] = useState(3);
+  const [unreadNotifications] = useState(3);
 
   const token = useMemo(() => localStorage.getItem("token"), [location]);
 
@@ -36,10 +36,11 @@ const AdminLayout = () => {
     const handleResize = () => {
       const isNowMobile = window.innerWidth < 1024;
       setIsMobile(isNowMobile);
-      setIsSidebarOpen(!isNowMobile);
+      if (isNowMobile) setIsSidebarOpen(false);
+      else setIsSidebarOpen(true);
     };
 
-    handleResize(); // Run once on mount
+    handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
@@ -48,7 +49,7 @@ const AdminLayout = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    navigate("/login");
+    navigate("/admin");
   };
 
   const navItems = [
@@ -61,13 +62,13 @@ const AdminLayout = () => {
     { to: "/admin/settings", icon: FiSettings, label: "Settings" },
   ];
 
-  if (!token) return <Navigate to="/login" replace />;
+  if (!token) return <Navigate to="/admin" replace />;
 
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-gray-50 to-indigo-50">
       {/* Sidebar */}
       <motion.aside
-        className={`bg-white shadow-xl p-4 sticky top-0 left-0 h-screen z-30 ${
+        className={`bg-white shadow-xl p-4 fixed lg:sticky top-0 left-0 h-screen z-30 ${
           isSidebarOpen ? "w-64" : "w-20"
         } transition-all duration-300`}
         initial={{ x: -300 }}
@@ -76,23 +77,35 @@ const AdminLayout = () => {
       >
         {/* Logo & Collapse Button */}
         <div className="flex items-center justify-between mb-6 h-12">
-          <img
-            src="/assets/logo/rmg-logo.png"
-            alt="Logo"
-            className={`${isSidebarOpen ? "h-10" : "h-8"} transition-all`}
-          />
+          {isSidebarOpen ? (
+            <img
+              src="/assets/logo/rmg-logo.png"
+              alt="Logo"
+              className="h-10 transition-all"
+            />
+          ) : (
+            <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center">
+              <span className="text-indigo-600 font-bold">R</span>
+            </div>
+          )}
           <button
-            className="lg:hidden text-gray-600 hover:text-indigo-600"
             onClick={toggleSidebar}
+            className="text-gray-600 hover:text-indigo-600"
           >
-            <FiChevronLeft className="w-6 h-6" />
+            {isSidebarOpen ? (
+              <FiChevronLeft className="w-6 h-6" />
+            ) : (
+              <FiChevronRight className="w-6 h-6" />
+            )}
           </button>
         </div>
 
         {/* Navigation */}
         <nav className="space-y-1">
           {navItems.map((item) => {
-            const isActive = location.pathname.startsWith(item.to);
+            const isActive =
+              location.pathname === item.to ||
+              (item.to !== "/admin" && location.pathname.startsWith(item.to));
             return (
               <Link
                 key={item.to}
@@ -105,25 +118,14 @@ const AdminLayout = () => {
               >
                 <item.icon
                   className={`text-lg ${
-                    isActive
-                      ? "text-white"
-                      : "text-indigo-500 group-hover:text-indigo-600"
+                    isActive ? "text-white" : "text-indigo-500"
                   }`}
                 />
-                <AnimatePresence>
-                  {isSidebarOpen && (
-                    <motion.span
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -10 }}
-                      className={`font-medium whitespace-nowrap ${
-                        isActive ? "text-white" : "text-gray-700"
-                      }`}
-                    >
-                      {item.label}
-                    </motion.span>
-                  )}
-                </AnimatePresence>
+                {isSidebarOpen && (
+                  <span className="font-medium whitespace-nowrap">
+                    {item.label}
+                  </span>
+                )}
               </Link>
             );
           })}
@@ -131,25 +133,18 @@ const AdminLayout = () => {
 
         {/* Sidebar Footer */}
         <div className="mt-auto pt-4 border-t border-gray-200">
-          <button
-            onClick={toggleSidebar}
-            className="hidden lg:flex items-center justify-center w-full p-2 mb-4 rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-100 transition"
-          >
-            {isSidebarOpen ? <FiChevronLeft /> : <FiChevronRight />}
-          </button>
-
           <div className="space-y-1">
-            <button className="flex items-center space-x-3 p-3 rounded-xl text-gray-600 hover:bg-indigo-50 hover:text-indigo-600 w-full transition group">
-              <FiHelpCircle className="text-lg text-indigo-500 group-hover:text-indigo-600" />
+            <button className="flex items-center space-x-3 p-3 rounded-xl text-gray-600 hover:bg-indigo-50 hover:text-indigo-600 w-full transition">
+              <FiHelpCircle className="text-lg text-indigo-500" />
               {isSidebarOpen && (
                 <span className="font-medium whitespace-nowrap">Help</span>
               )}
             </button>
             <button
               onClick={handleLogout}
-              className="flex items-center space-x-3 p-3 rounded-xl text-gray-600 hover:bg-red-50 hover:text-red-600 w-full transition group"
+              className="flex items-center space-x-3 p-3 rounded-xl text-gray-600 hover:bg-red-50 hover:text-red-600 w-full transition"
             >
-              <FiLogOut className="text-lg text-red-500 group-hover:text-red-600" />
+              <FiLogOut className="text-lg text-red-500" />
               {isSidebarOpen && (
                 <span className="font-medium whitespace-nowrap">Logout</span>
               )}
@@ -159,15 +154,24 @@ const AdminLayout = () => {
       </motion.aside>
 
       {/* Overlay for mobile */}
-      {isMobile && isSidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-40 z-20 lg:hidden"
-          onClick={toggleSidebar}
-        />
-      )}
+      <AnimatePresence>
+        {isMobile && isSidebarOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black bg-opacity-40 z-20 lg:hidden"
+            onClick={toggleSidebar}
+          />
+        )}
+      </AnimatePresence>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-auto">
+      <div
+        className={`flex-1 overflow-auto transition-all ${
+          isSidebarOpen && !isMobile ? "ml-64" : "ml-20"
+        }`}
+      >
         <header className="bg-white shadow-sm p-4 flex justify-between items-center sticky top-0 z-10">
           <div className="flex items-center gap-4">
             <button
@@ -177,20 +181,20 @@ const AdminLayout = () => {
               <FiChevronRight className="w-6 h-6" />
             </button>
             <h2 className="text-xl font-semibold text-gray-800">
-              {navItems.find((item) => location.pathname.startsWith(item.to))
-                ?.label ?? "Admin"}
+              {navItems.find(
+                (item) =>
+                  location.pathname === item.to ||
+                  (item.to !== "/admin" &&
+                    location.pathname.startsWith(item.to))
+              )?.label || "Admin"}
             </h2>
           </div>
 
           <div className="flex items-center gap-4">
-            <button className="p-2 rounded-full hover:bg-gray-100">
-              <FiMessageSquare className="text-xl text-gray-600 hover:text-indigo-600" />
-            </button>
-
             <button className="p-2 rounded-full hover:bg-gray-100 relative">
-              <FiBell className="text-xl text-gray-600 hover:text-indigo-600" />
+              <FiBell className="text-xl text-gray-600" />
               {unreadNotifications > 0 && (
-                <span className="absolute top-0 right-0 h-4 w-4 rounded-full bg-red-500 text-white text-xs flex items-center justify-center animate-pulse">
+                <span className="absolute top-0 right-0 h-4 w-4 rounded-full bg-red-500 text-white text-xs flex items-center justify-center">
                   {unreadNotifications}
                 </span>
               )}
@@ -200,7 +204,7 @@ const AdminLayout = () => {
               <img
                 src="/assets/creatives/admin.jpg"
                 alt="Admin"
-                className="h-9 w-9 rounded-full object-cover border border-indigo-100"
+                className="h-9 w-9 rounded-full object-cover border-2 border-indigo-100"
               />
               <div className="hidden md:block">
                 <p className="text-sm font-semibold text-gray-800">Admin</p>
