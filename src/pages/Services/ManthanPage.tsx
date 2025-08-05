@@ -6,6 +6,7 @@ import {
   FaPlay,
   FaRegSmileBeam,
   FaCheck,
+  FaTimes,
 } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -17,6 +18,8 @@ import {
   FiMail,
   FiUser,
   FiPhone,
+  FiClock,
+  FiMapPin,
 } from "react-icons/fi";
 import { motion } from "framer-motion";
 
@@ -28,6 +31,59 @@ const ManthanPage = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [showEventModal, setShowEventModal] = useState(false);
+
+  // Sample event data
+  const upcomingEvents = [
+    {
+      id: 1,
+      title: "Manthan 2023: Leadership Summit",
+      date: "November 15, 2023",
+      time: "10:00 AM - 4:00 PM",
+      location: "Virtual (YouTube Live)",
+      description:
+        "Join us for a day of inspiring talks from industry leaders about the future of leadership in technology.",
+      image:
+        "https://images.unsplash.com/photo-1431540015161-0bf868a2d407?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+    },
+    {
+      id: 2,
+      title: "Innovation Workshop",
+      date: "December 5, 2023",
+      time: "2:00 PM - 5:00 PM",
+      location: "Online",
+      description:
+        "Hands-on workshop to develop innovative thinking and problem-solving skills.",
+      image:
+        "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+    },
+  ];
+
+  const pastEvents = [
+    {
+      id: 3,
+      title: "Manthan 2022: Tech for Good",
+      date: "October 20, 2022",
+      time: "Completed",
+      location: "Virtual",
+      description:
+        "Exploring how technology can be leveraged for social impact and community development.",
+      image:
+        "https://images.unsplash.com/photo-1497366811353-6870744d04b2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+    },
+    {
+      id: 4,
+      title: "Startup Bootcamp",
+      date: "August 12, 2022",
+      time: "Completed",
+      location: "Bangalore",
+      description:
+        "Intensive bootcamp for early-stage startups with mentorship from industry experts.",
+      image:
+        "https://images.unsplash.com/photo-1521791136064-7986c2920216?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+    },
+  ];
 
   const stats = [
     {
@@ -117,6 +173,24 @@ const ManthanPage = () => {
     }
   };
 
+  const openEventModal = (event) => {
+    setSelectedEvent(event);
+    setShowEventModal(true);
+  };
+
+  const closeEventModal = () => {
+    setShowEventModal(false);
+    setSelectedEvent(null);
+  };
+
+  const handleRegisterFromModal = () => {
+    closeEventModal();
+    // Scroll to registration form
+    document.getElementById("registration-form").scrollIntoView({
+      behavior: "smooth",
+    });
+  };
+
   return (
     <div className="bg-slate-100 min-h-screen">
       <ToastContainer
@@ -158,7 +232,7 @@ const ManthanPage = () => {
                     <span className="text-yellow-500">★</span>
                   </div>
                   <span className="flex items-center bg-red-100 px-3 py-1 rounded-full text-red-700">
-                    <FaYoutube className="mr-1" /> YouTube Live
+                    <FaYoutube className="mr-1" /> Live
                   </span>
                 </div>
               </div>
@@ -203,8 +277,113 @@ const ManthanPage = () => {
           </motion.div>
         </motion.div>
 
+        {/* Events Section */}
+        <div className="max-w-6xl mx-auto mb-20">
+          {/* Upcoming Events */}
+          <div className="mb-16">
+            <h2 className="text-3xl font-bold text-gray-800 mb-8 flex items-center">
+              <FiCalendar className="text-indigo-600 mr-3" />
+              Upcoming Events
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {upcomingEvents.map((event) => (
+                <motion.div
+                  key={event.id}
+                  whileHover={{ y: -5 }}
+                  className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200"
+                >
+                  <div className="h-48 overflow-hidden">
+                    <img
+                      src={event.image}
+                      alt={event.title}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-xl font-semibold mb-2">
+                      {event.title}
+                    </h3>
+                    <div className="flex items-center text-gray-600 mb-2">
+                      <FiClock className="mr-2" />
+                      <span>
+                        {event.date} • {event.time}
+                      </span>
+                    </div>
+                    <div className="flex items-center text-gray-600 mb-4">
+                      <FiMapPin className="mr-2" />
+                      <span>{event.location}</span>
+                    </div>
+                    <p className="text-gray-600 mb-4 line-clamp-2">
+                      {event.description}
+                    </p>
+                    <button
+                      onClick={() => openEventModal(event)}
+                      className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition duration-300"
+                    >
+                      View Details
+                    </button>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+
+          {/* Past Events */}
+          <div>
+            <h2 className="text-3xl font-bold text-gray-800 mb-8 flex items-center">
+              <FiCalendar className="text-indigo-600 mr-3" />
+              Past Events
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {pastEvents.map((event) => (
+                <motion.div
+                  key={event.id}
+                  whileHover={{ y: -5 }}
+                  className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200 opacity-80 hover:opacity-100 transition-opacity"
+                >
+                  <div className="h-48 overflow-hidden relative">
+                    <img
+                      src={event.image}
+                      alt={event.title}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute top-4 right-4 bg-black/70 text-white px-3 py-1 rounded-full text-xs font-medium">
+                      Completed
+                    </div>
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-xl font-semibold mb-2">
+                      {event.title}
+                    </h3>
+                    <div className="flex items-center text-gray-600 mb-2">
+                      <FiClock className="mr-2" />
+                      <span>{event.date}</span>
+                    </div>
+                    <div className="flex items-center text-gray-600 mb-4">
+                      <FiMapPin className="mr-2" />
+                      <span>{event.location}</span>
+                    </div>
+                    <p className="text-gray-600 mb-4 line-clamp-2">
+                      {event.description}
+                    </p>
+                    <button
+                      onClick={() => openEventModal(event)}
+                      className="w-full bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-lg transition duration-300"
+                    >
+                      View Details
+                    </button>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </div>
+
         {/* Registration Form with Image */}
-        <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-lg mb-20 overflow-hidden border border-gray-200">
+        <div
+          id="registration-form"
+          className="max-w-4xl mx-auto bg-white rounded-xl shadow-lg mb-20 overflow-hidden border border-gray-200"
+        >
           <div className="grid grid-cols-1 md:grid-cols-2">
             {/* Form Section */}
             <div className="p-8">
@@ -357,6 +536,7 @@ const ManthanPage = () => {
             </div>
           </div>
         </div>
+
         {/* LinkedIn + Newsletter */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10 max-w-4xl mx-auto">
           {/* LinkedIn Card */}
@@ -371,7 +551,7 @@ const ManthanPage = () => {
               Network with attendees, speakers, and industry experts.
             </p>
             <a
-              href="https://www.linkedin.com/company/refermegroup/" // 🔁 Replace with actual LinkedIn group link
+              href="https://www.linkedin.com/company/refermegroup/"
               target="_blank"
               rel="noopener noreferrer"
               className="w-full flex items-center justify-center gap-3 px-6 py-3 bg-blue-700 text-white rounded-lg hover:bg-blue-800 transition-all shadow-md"
@@ -413,6 +593,91 @@ const ManthanPage = () => {
           </motion.div>
         </div>
       </div>
+
+      {/* Event Details Modal */}
+      {showEventModal && selectedEvent && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+          >
+            <div className="relative">
+              <div className="h-64 overflow-hidden">
+                <img
+                  src={selectedEvent.image}
+                  alt={selectedEvent.title}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <button
+                onClick={closeEventModal}
+                className="absolute top-4 right-4 bg-white/90 text-gray-800 rounded-full p-2 hover:bg-white transition"
+              >
+                <FaTimes />
+              </button>
+            </div>
+            <div className="p-6">
+              <h3 className="text-2xl font-bold mb-4">{selectedEvent.title}</h3>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <div className="flex items-start">
+                  <FiCalendar className="text-indigo-600 mt-1 mr-2" />
+                  <div>
+                    <p className="text-gray-500 text-sm">Date</p>
+                    <p className="font-medium">{selectedEvent.date}</p>
+                  </div>
+                </div>
+                <div className="flex items-start">
+                  <FiClock className="text-indigo-600 mt-1 mr-2" />
+                  <div>
+                    <p className="text-gray-500 text-sm">Time</p>
+                    <p className="font-medium">{selectedEvent.time}</p>
+                  </div>
+                </div>
+                <div className="flex items-start">
+                  <FiMapPin className="text-indigo-600 mt-1 mr-2" />
+                  <div>
+                    <p className="text-gray-500 text-sm">Location</p>
+                    <p className="font-medium">{selectedEvent.location}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mb-6">
+                <h4 className="text-lg font-semibold mb-2">About the Event</h4>
+                <p className="text-gray-700">{selectedEvent.description}</p>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-3">
+                {upcomingEvents.some((e) => e.id === selectedEvent.id) ? (
+                  <>
+                    <button
+                      onClick={handleRegisterFromModal}
+                      className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 px-4 rounded-lg transition"
+                    >
+                      Register Now
+                    </button>
+                    <button
+                      onClick={closeEventModal}
+                      className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-3 px-4 rounded-lg transition"
+                    >
+                      Cancel
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    onClick={closeEventModal}
+                    className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 px-4 rounded-lg transition"
+                  >
+                    Close
+                  </button>
+                )}
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      )}
     </div>
   );
 };
