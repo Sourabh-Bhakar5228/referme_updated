@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Eye, EyeOff, Mail, Lock, Shield } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export default function AdminLoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -8,15 +9,53 @@ export default function AdminLoginPage() {
     password: "",
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
-  const handleSubmit = async () => {
+  useEffect(() => {
+    // Clear any existing token when login page loads
+    localStorage.removeItem("adminToken");
+  }, []);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     setIsLoading(true);
+    setError("");
 
-    // Simulate API call
-    setTimeout(() => {
+    if (!formData.email || !formData.password) {
+      setError("Please fill in all fields");
       setIsLoading(false);
-      alert("Admin login successful!");
-    }, 2000);
+      return;
+    }
+
+    try {
+      // Simulate API call
+      const response = await new Promise((resolve) =>
+        setTimeout(() => {
+          if (
+            formData.email === "admin@example.com" &&
+            formData.password === "admin123"
+          ) {
+            resolve({ success: true });
+          } else {
+            resolve({ success: false, message: "Invalid credentials" });
+          }
+        }, 1000)
+      );
+
+      if (response.success) {
+        localStorage.setItem("adminToken", "valid-auth-token");
+
+        navigate("/admin/dashboard", { replace: true });
+        // window.location.href = "/admin/dashboard";
+      } else {
+        setError(response.message || "Login failed");
+      }
+    } catch (err) {
+      setError("An error occurred during login");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleInputChange = (e) => {
@@ -28,7 +67,7 @@ export default function AdminLoginPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-700 flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Animated background elements */}
+      {/* Background elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-white/10 rounded-full blur-3xl animate-pulse"></div>
         <div
@@ -41,10 +80,9 @@ export default function AdminLoginPage() {
         ></div>
       </div>
 
-      {/* Main container */}
+      {/* Login form */}
       <div className="relative z-10 w-full max-w-md">
         <div className="bg-white/95 backdrop-blur-lg rounded-3xl shadow-2xl p-8 transform transition-all duration-500 hover:scale-105">
-          {/* Header */}
           <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full mb-6 shadow-xl animate-pulse">
               <Shield className="w-10 h-10 text-white" />
@@ -62,9 +100,13 @@ export default function AdminLoginPage() {
             </div>
           </div>
 
-          {/* Form */}
-          <div className="space-y-6">
-            {/* Email field */}
+          {error && (
+            <div className="mb-6 bg-red-50 border border-red-200 rounded-xl p-4">
+              <p className="text-red-700">{error}</p>
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="space-y-6">
             <div className="relative group">
               <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-purple-500 transition-colors duration-300" />
               <input
@@ -78,7 +120,6 @@ export default function AdminLoginPage() {
               />
             </div>
 
-            {/* Password field */}
             <div className="relative group">
               <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-purple-500 transition-colors duration-300" />
               <input
@@ -103,7 +144,6 @@ export default function AdminLoginPage() {
               </button>
             </div>
 
-            {/* Security notice */}
             <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
               <div className="flex items-center">
                 <Shield className="w-5 h-5 text-blue-600 mr-3 flex-shrink-0" />
@@ -114,9 +154,8 @@ export default function AdminLoginPage() {
               </div>
             </div>
 
-            {/* Submit button */}
             <button
-              onClick={handleSubmit}
+              type="submit"
               disabled={isLoading}
               className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-4 rounded-2xl font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none relative overflow-hidden group"
             >
@@ -131,13 +170,10 @@ export default function AdminLoginPage() {
                   Secure Admin Login
                 </div>
               )}
-
-              {/* Button shine effect */}
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
             </button>
-          </div>
+          </form>
 
-          {/* Footer */}
           <div className="mt-8 text-center">
             <p className="text-gray-500 text-sm mb-4">
               Need admin access? Contact your system administrator.

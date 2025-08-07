@@ -42,6 +42,13 @@ import AdminProfile from "../Admin/AdminProfile/AdminProfile";
 import AdminSettings from "../Admin/AdminProfile/AdminSettings";
 import AdminLogin from "../Admin/AddLogin/AdminLogin";
 import AdminContact from "../Admin/AdminContact/AdminContact";
+import AdminAbout from "../Admin/AboutUS/AdminAbout";
+import OurStoryAdmin from "../Admin/AboutUS/OurStoryAdmin";
+import CoreCmtyAdmin from "../Admin/AboutUS/CoreCmtyAdmin";
+import PaymentPolicyAdmin from "../Admin/AboutUS/PaymentPolicyAdmin";
+import WebniarAdmin from "../Admin/OurServices/WebniarAdmin";
+import ManthanWebniarAdmin from "../Admin/OurServices/ManthanWebniarAdmin";
+import AdminLogout from "../Admin/AddLogin/AdminLogout";
 
 const router = createBrowserRouter([
   // Public routes
@@ -106,6 +113,7 @@ const router = createBrowserRouter([
       { path: "career", element: <Careers /> },
       { path: "courses/:courseId", element: <CourseDetail /> },
       { path: "login", element: <AdminLogin /> },
+      { path: "logout", element: <AdminLogout /> },
     ],
   },
 
@@ -115,13 +123,20 @@ const router = createBrowserRouter([
     element: <AdminLayout />,
     children: [
       { index: true, element: <Dashboard /> }, // /admin
-      { path: "dashboard", element: <Dashboard /> }, // /admin/dashboard
-      { path: "navbar", element: <AdminNavbar /> }, // /admin/dashboard
-      { path: "footer", element: <AdminFooter /> }, // /admin/dashboard
-      { path: "courses", element: <AdminCourses /> }, // /admin/dashboard
-      { path: "profile", element: <AdminProfile /> }, // /admin/dashboard
-      { path: "settings", element: <AdminSettings /> }, // /admin/dashboard
-      { path: "contact", element: <AdminContact /> }, // /admin/dashboard
+      { path: "dashboard", element: <Dashboard /> },
+      { path: "navbar", element: <AdminNavbar /> },
+      { path: "footer", element: <AdminFooter /> },
+      { path: "courses", element: <AdminCourses /> },
+      { path: "profile", element: <AdminProfile /> },
+      { path: "settings", element: <AdminSettings /> },
+      { path: "contact", element: <AdminContact /> },
+      { path: "contact", element: <AdminContact /> },
+      { path: "about/what-we-do", element: <AdminAbout /> },
+      { path: "about/our-story", element: <OurStoryAdmin /> },
+      { path: "about/core-committee", element: <CoreCmtyAdmin /> },
+      { path: "about/payment-policy", element: <PaymentPolicyAdmin /> },
+      { path: "services/webinars", element: <WebniarAdmin /> },
+      { path: "services/manthan", element: <ManthanWebniarAdmin /> },
     ],
   },
 

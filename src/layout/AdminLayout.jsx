@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   Menu,
   X,
@@ -66,12 +66,12 @@ const AdminDashboard = () => {
       icon: Menu,
       link: "/admin/navbar",
     },
-    {
-      id: "home-section",
-      name: "Home Section",
-      icon: Home,
-      link: "/admin/home-section",
-    },
+    // {
+    //   id: "home-section",
+    //   name: "Home Section",
+    //   icon: Home,
+    //   link: "/admin/home-section",
+    // },
     {
       id: "blog",
       name: "Blog",
@@ -84,12 +84,12 @@ const AdminDashboard = () => {
       icon: BookOpen,
       link: "/admin/courses",
     },
-    {
-      id: "webinar",
-      name: "Webinars",
-      icon: Video,
-      link: "/admin/webinars",
-    },
+    // {
+    //   id: "webinar",
+    //   name: "Webinars",
+    //   icon: Video,
+    //   link: "/admin/webinars",
+    // },
     {
       id: "about",
       name: "About Us",
