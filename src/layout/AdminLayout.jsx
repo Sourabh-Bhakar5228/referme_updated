@@ -1,225 +1,393 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import {
-  Outlet,
-  Link,
-  useLocation,
-  Navigate,
-  useNavigate,
-} from "react-router-dom";
-import {
-  FiHome,
-  FiUsers,
-  FiBook,
-  FiBarChart2,
-  FiSettings,
-  FiLogOut,
-  FiBell,
-  FiChevronLeft,
-  FiChevronRight,
-  FiMessageSquare,
-  FiHelpCircle,
-  FiBookOpen,
-  FiUserCheck,
-} from "react-icons/fi";
-import { motion, AnimatePresence } from "framer-motion";
+  Menu,
+  X,
+  Search,
+  Sun,
+  Moon,
+  Settings,
+  User,
+  LogOut,
+  Home,
+  FileText,
+  BookOpen,
+  Video,
+  ChevronDown,
+  ChevronUp,
+  Info,
+  Bookmark,
+  Phone,
+  Footprints,
+} from "lucide-react";
+import { Link, useLocation, useNavigate, Outlet } from "react-router-dom";
 
-const AdminLayout = () => {
-  const location = useLocation();
+const AdminDashboard = () => {
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [darkMode, setDarkMode] = useState(() => {
+    const savedTheme = localStorage.getItem("darkMode");
+    return savedTheme ? JSON.parse(savedTheme) : false;
+  });
+  const [profileDropdown, setProfileDropdown] = useState(false);
+  const [activeTab, setActiveTab] = useState("dashboard");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [aboutDropdownOpen, setAboutDropdownOpen] = useState(false);
+  const [servicesDropdownOpen, setServicesDropdownOpen] = useState(false);
+
   const navigate = useNavigate();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [isMobile, setIsMobile] = useState(false);
-  const [unreadNotifications] = useState(3);
-
-  const token = useMemo(() => localStorage.getItem("token"), [location]);
+  const location = useLocation();
 
   useEffect(() => {
-    const handleResize = () => {
-      const isNowMobile = window.innerWidth < 1024;
-      setIsMobile(isNowMobile);
-      if (isNowMobile) setIsSidebarOpen(false);
-      else setIsSidebarOpen(true);
-    };
+    localStorage.setItem("darkMode", JSON.stringify(darkMode));
+    if (darkMode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [darkMode]);
 
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
+  const toggleDarkMode = () => setDarkMode(!darkMode);
+  const toggleProfileDropdown = () => setProfileDropdown(!profileDropdown);
+  const toggleAboutDropdown = () => setAboutDropdownOpen(!aboutDropdownOpen);
+  const toggleServicesDropdown = () =>
+    setServicesDropdownOpen(!servicesDropdownOpen);
 
-  const toggleSidebar = () => setIsSidebarOpen((prev) => !prev);
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    navigate("/admin");
-  };
-
-  const navItems = [
-    { to: "/admin", icon: FiHome, label: "Dashboard" },
-    { to: "/admin/users", icon: FiUsers, label: "Users" },
-    { to: "/admin/blogs", icon: FiBookOpen, label: "Blogs" },
-    { to: "/admin/enrolled", icon: FiUserCheck, label: "Users Enrolled" },
-    { to: "/admin/courses", icon: FiBook, label: "Courses" },
-    { to: "/admin/analytics", icon: FiBarChart2, label: "Analytics" },
-    { to: "/admin/settings", icon: FiSettings, label: "Settings" },
+  // Sidebar items
+  const sidebarItems = [
+    {
+      id: "dashboard",
+      name: "Dashboard",
+      icon: Home,
+      link: "/admin/dashboard",
+    },
+    {
+      id: "navbar",
+      name: "Navbar",
+      icon: Menu,
+      link: "/admin/navbar",
+    },
+    {
+      id: "home-section",
+      name: "Home Section",
+      icon: Home,
+      link: "/admin/home-section",
+    },
+    {
+      id: "blog",
+      name: "Blog",
+      icon: FileText,
+      link: "/admin/blog",
+    },
+    {
+      id: "courses",
+      name: "Courses",
+      icon: BookOpen,
+      link: "/admin/courses",
+    },
+    {
+      id: "webinar",
+      name: "Webinars",
+      icon: Video,
+      link: "/admin/webinars",
+    },
+    {
+      id: "about",
+      name: "About Us",
+      icon: Info,
+      subItems: [
+        { id: "our-story", name: "Our Story", link: "/admin/about/our-story" },
+        {
+          id: "core-committee",
+          name: "Core Committee",
+          link: "/admin/about/core-committee",
+        },
+        {
+          id: "payment-policy",
+          name: "Our Payment Policy",
+          link: "/admin/about/payment-policy",
+        },
+        {
+          id: "what-we-do",
+          name: "What We Do",
+          link: "/admin/about/what-we-do",
+        },
+      ],
+    },
+    {
+      id: "services",
+      name: "Our Services",
+      icon: Bookmark,
+      subItems: [
+        { id: "webinars", name: "Webinars", link: "/admin/services/webinars" },
+        { id: "manthan", name: "Manthan", link: "/admin/services/manthan" },
+      ],
+    },
+    {
+      id: "contact",
+      name: "Contact Us",
+      icon: Phone,
+      link: "/admin/contact",
+    },
+    {
+      id: "footer",
+      name: "Footer",
+      icon: Footprints,
+      link: "/admin/footer",
+    },
   ];
 
-  if (!token) return <Navigate to="/admin" replace />;
-
   return (
-    <div className="flex min-h-screen bg-gradient-to-br from-gray-50 to-indigo-50">
+    <div
+      className={`flex h-screen ${
+        darkMode ? "dark bg-gray-900" : "bg-gray-50"
+      }`}
+    >
       {/* Sidebar */}
-      <motion.aside
-        className={`bg-white shadow-xl p-4 fixed lg:sticky top-0 left-0 h-screen z-30 ${
-          isSidebarOpen ? "w-64" : "w-20"
-        } transition-all duration-300`}
-        initial={{ x: -300 }}
-        animate={{ x: isSidebarOpen || !isMobile ? 0 : -300 }}
-        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+      <div
+        className={`${sidebarOpen ? "w-64" : "w-20"} ${
+          darkMode ? "bg-gray-800" : "bg-white"
+        } transition-all duration-300 ease-in-out border-r ${
+          darkMode ? "border-gray-700" : "border-gray-200"
+        } flex flex-col`}
       >
-        {/* Logo & Collapse Button */}
-        <div className="flex items-center justify-between mb-6 h-12">
-          {isSidebarOpen ? (
-            <img
-              src="/assets/logo/rmg-logo.png"
-              alt="Logo"
-              className="h-10 transition-all"
-            />
+        <div className="p-4 flex items-center justify-between border-b border-gray-200 dark:border-gray-700">
+          {sidebarOpen ? (
+            <h1 className="text-xl font-bold dark:text-purple-500">
+              Refer Me Group
+            </h1>
           ) : (
-            <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center">
-              <span className="text-indigo-600 font-bold">R</span>
-            </div>
+            <h1 className="text-xs font-bold dark:text-white">RMG</h1>
           )}
           <button
             onClick={toggleSidebar}
-            className="text-gray-600 hover:text-indigo-600"
+            className={`p-2 rounded-lg ${
+              darkMode
+                ? "hover:bg-gray-700 text-gray-400"
+                : "hover:bg-gray-100 text-gray-600"
+            } transition-colors`}
           >
-            {isSidebarOpen ? (
-              <FiChevronLeft className="w-6 h-6" />
+            {sidebarOpen ? (
+              <X className="h-5 w-5" />
             ) : (
-              <FiChevronRight className="w-6 h-6" />
+              <Menu className="h-5 w-5" />
             )}
           </button>
         </div>
-
-        {/* Navigation */}
-        <nav className="space-y-1">
-          {navItems.map((item) => {
-            const isActive =
-              location.pathname === item.to ||
-              (item.to !== "/admin" && location.pathname.startsWith(item.to));
-            return (
-              <Link
-                key={item.to}
-                to={item.to}
-                className={`flex items-center space-x-3 p-3 rounded-xl transition-all group ${
-                  isActive
-                    ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg"
-                    : "text-gray-600 hover:bg-indigo-50 hover:text-indigo-600"
-                }`}
-              >
-                <item.icon
-                  className={`text-lg ${
-                    isActive ? "text-white" : "text-indigo-500"
-                  }`}
-                />
-                {isSidebarOpen && (
-                  <span className="font-medium whitespace-nowrap">
-                    {item.label}
-                  </span>
+        <div className="flex-1 overflow-y-auto">
+          <nav className="p-4 space-y-1">
+            {sidebarItems.map((item) => (
+              <div key={item.id}>
+                {item.subItems ? (
+                  <div>
+                    <button
+                      onClick={() => {
+                        if (item.id === "about") toggleAboutDropdown();
+                        if (item.id === "services") toggleServicesDropdown();
+                      }}
+                      className={`flex items-center justify-between w-full p-3 rounded-lg transition-colors ${
+                        activeTab === item.id
+                          ? darkMode
+                            ? "bg-gray-700 text-white"
+                            : "bg-blue-100 text-blue-600"
+                          : darkMode
+                          ? "text-gray-400 hover:bg-gray-700 hover:text-white"
+                          : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                      }`}
+                    >
+                      <div className="flex items-center">
+                        <item.icon className="h-5 w-5" />
+                        {sidebarOpen && (
+                          <span className="ml-3">{item.name}</span>
+                        )}
+                      </div>
+                      {sidebarOpen &&
+                        ((item.id === "about" && aboutDropdownOpen) ||
+                        (item.id === "services" && servicesDropdownOpen) ? (
+                          <ChevronUp className="h-4 w-4" />
+                        ) : (
+                          <ChevronDown className="h-4 w-4" />
+                        ))}
+                    </button>
+                    {(item.id === "about" &&
+                      aboutDropdownOpen &&
+                      sidebarOpen) ||
+                    (item.id === "services" &&
+                      servicesDropdownOpen &&
+                      sidebarOpen) ? (
+                      <div
+                        className={`ml-8 mt-1 space-y-1 ${
+                          darkMode ? "text-gray-400" : "text-gray-600"
+                        }`}
+                      >
+                        {item.subItems.map((subItem) => (
+                          <Link
+                            key={subItem.id}
+                            to={subItem.link}
+                            className="block px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                            onClick={() => setActiveTab(item.id)}
+                          >
+                            {subItem.name}
+                          </Link>
+                        ))}
+                      </div>
+                    ) : null}
+                  </div>
+                ) : (
+                  <Link
+                    to={item.link}
+                    className={`flex items-center w-full p-3 rounded-lg transition-colors ${
+                      activeTab === item.id
+                        ? darkMode
+                          ? "bg-gray-700 text-white"
+                          : "bg-blue-100 text-blue-600"
+                        : darkMode
+                        ? "text-gray-400 hover:bg-gray-700 hover:text-white"
+                        : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                    }`}
+                    onClick={() => setActiveTab(item.id)}
+                  >
+                    <item.icon className="h-5 w-5" />
+                    {sidebarOpen && <span className="ml-3">{item.name}</span>}
+                  </Link>
                 )}
-              </Link>
-            );
-          })}
-        </nav>
-
-        {/* Sidebar Footer */}
-        <div className="mt-auto pt-4 border-t border-gray-200">
-          <div className="space-y-1">
-            <button className="flex items-center space-x-3 p-3 rounded-xl text-gray-600 hover:bg-indigo-50 hover:text-indigo-600 w-full transition">
-              <FiHelpCircle className="text-lg text-indigo-500" />
-              {isSidebarOpen && (
-                <span className="font-medium whitespace-nowrap">Help</span>
-              )}
-            </button>
-            <button
-              onClick={handleLogout}
-              className="flex items-center space-x-3 p-3 rounded-xl text-gray-600 hover:bg-red-50 hover:text-red-600 w-full transition"
-            >
-              <FiLogOut className="text-lg text-red-500" />
-              {isSidebarOpen && (
-                <span className="font-medium whitespace-nowrap">Logout</span>
-              )}
-            </button>
-          </div>
+              </div>
+            ))}
+          </nav>
         </div>
-      </motion.aside>
 
-      {/* Overlay for mobile */}
-      <AnimatePresence>
-        {isMobile && isSidebarOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black bg-opacity-40 z-20 lg:hidden"
-            onClick={toggleSidebar}
-          />
-        )}
-      </AnimatePresence>
+        {/* Footer in Sidebar */}
+        <div
+          className={`p-4 border-t ${
+            darkMode
+              ? "border-gray-700 text-gray-400"
+              : "border-gray-200 text-gray-600"
+          } text-sm`}
+        >
+          {sidebarOpen ? (
+            <div>
+              <p>Admin Panel v1.0</p>
+              <p className="mt-1">© 2024 Your Company</p>
+            </div>
+          ) : (
+            <p>AP v1.0</p>
+          )}
+        </div>
+      </div>
 
       {/* Main Content */}
-      <div
-        className={`flex-1 overflow-auto transition-all ${
-          isSidebarOpen && !isMobile ? "ml-64" : "ml-20"
-        }`}
-      >
-        <header className="bg-white shadow-sm p-4 flex justify-between items-center sticky top-0 z-10">
-          <div className="flex items-center gap-4">
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Header */}
+        <header
+          className={`flex items-center justify-between p-4 border-b ${
+            darkMode
+              ? "border-gray-700 bg-gray-800"
+              : "border-gray-200 bg-white"
+          }`}
+        >
+          <div className="flex items-center space-x-4">
             <button
-              className="lg:hidden text-gray-600 hover:text-indigo-600"
-              onClick={toggleSidebar}
+              onClick={toggleDarkMode}
+              className={`p-2 rounded-lg ${
+                darkMode
+                  ? "hover:bg-gray-700 text-gray-400"
+                  : "hover:bg-gray-100 text-gray-600"
+              } transition-colors`}
             >
-              <FiChevronRight className="w-6 h-6" />
-            </button>
-            <h2 className="text-xl font-semibold text-gray-800">
-              {navItems.find(
-                (item) =>
-                  location.pathname === item.to ||
-                  (item.to !== "/admin" &&
-                    location.pathname.startsWith(item.to))
-              )?.label || "Admin"}
-            </h2>
-          </div>
-
-          <div className="flex items-center gap-4">
-            <button className="p-2 rounded-full hover:bg-gray-100 relative">
-              <FiBell className="text-xl text-gray-600" />
-              {unreadNotifications > 0 && (
-                <span className="absolute top-0 right-0 h-4 w-4 rounded-full bg-red-500 text-white text-xs flex items-center justify-center">
-                  {unreadNotifications}
-                </span>
+              {darkMode ? (
+                <Sun className="h-5 w-5" />
+              ) : (
+                <Moon className="h-5 w-5" />
               )}
             </button>
-
-            <div className="flex items-center gap-3">
-              <img
-                src="/assets/creatives/admin.jpg"
-                alt="Admin"
-                className="h-9 w-9 rounded-full object-cover border-2 border-indigo-100"
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Search..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className={`pl-10 pr-4 py-2 rounded-lg border ${
+                  darkMode
+                    ? "bg-gray-700 border-gray-600 text-white"
+                    : "bg-white border-gray-300 text-gray-900"
+                } focus:outline-none focus:ring-2 focus:ring-blue-500`}
               />
-              <div className="hidden md:block">
-                <p className="text-sm font-semibold text-gray-800">Admin</p>
-                <p className="text-xs text-gray-500">Super Admin</p>
-              </div>
+              <Search className="h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
             </div>
+          </div>
+          <div className="relative">
+            <button
+              onClick={toggleProfileDropdown}
+              className={`flex items-center p-2 rounded-lg ${
+                darkMode
+                  ? "hover:bg-gray-700 text-gray-400"
+                  : "hover:bg-gray-100 text-gray-600"
+              } transition-colors`}
+            >
+              <User className="h-5 w-5 mr-2" />
+              {sidebarOpen && <span>Admin User</span>}
+            </button>
+            {profileDropdown && (
+              <div
+                className={`absolute right-0 mt-2 w-48 rounded-lg shadow-lg ${
+                  darkMode
+                    ? "bg-gray-800 text-gray-300"
+                    : "bg-white text-gray-700"
+                } py-2`}
+              >
+                <Link
+                  to="/admin/profile"
+                  className="flex items-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                >
+                  <User className="h-4 w-4 mr-2" /> Profile
+                </Link>
+                <Link
+                  to="/admin/settings"
+                  className="flex items-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                >
+                  <Settings className="h-4 w-4 mr-2" /> Settings
+                </Link>
+                <Link
+                  to="/logout"
+                  className="flex items-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                >
+                  <LogOut className="h-4 w-4 mr-2" /> Logout
+                </Link>
+              </div>
+            )}
           </div>
         </header>
 
-        <main className="p-4 md:p-6 max-w-7xl mx-auto">
+        {/* Content */}
+        <main className="flex-1 overflow-y-auto p-6">
           <Outlet />
         </main>
+
+        {/* Footer */}
+        <footer
+          className={`p-4 border-t ${
+            darkMode
+              ? "border-gray-700 bg-gray-800 text-gray-400"
+              : "border-gray-200 bg-white text-gray-600"
+          } text-sm flex justify-between items-center`}
+        >
+          <div>
+            <p>© 2024 Your Company. All rights reserved.</p>
+          </div>
+          <div className="flex space-x-4">
+            <a href="#" className="hover:underline">
+              Terms
+            </a>
+            <a href="#" className="hover:underline">
+              Privacy
+            </a>
+            <a href="#" className="hover:underline">
+              Help
+            </a>
+          </div>
+        </footer>
       </div>
     </div>
   );
 };
 
-export default AdminLayout;
+export default AdminDashboard;

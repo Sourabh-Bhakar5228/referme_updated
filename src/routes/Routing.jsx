@@ -33,6 +33,16 @@ import Blog6 from "../pages/Blogs/Blog6";
 import Blog7 from "../pages/Blogs/Blog7";
 import Blog8 from "../pages/Blogs/Blog8";
 
+// Admin page imports
+import Dashboard from "../Admin/AdminDashboard/AdDashboard";
+import AdminNavbar from "../Admin/AddNavorFooter/AdminNavbar";
+import AdminFooter from "../Admin/AddNavorFooter/AdminFooter";
+import AdminCourses from "../Admin/CoursesAdmin/AdminCourses";
+import AdminProfile from "../Admin/AdminProfile/AdminProfile";
+import AdminSettings from "../Admin/AdminProfile/AdminSettings";
+import AdminLogin from "../Admin/AddLogin/AdminLogin";
+import AdminContact from "../Admin/AdminContact/AdminContact";
+
 const router = createBrowserRouter([
   // Public routes
   {
@@ -65,7 +75,9 @@ const router = createBrowserRouter([
           { path: "freelancing", element: <Freelancing /> },
         ],
       },
-      { path: "/webinars/:id", element: <WebinarDetail /> },
+
+      // Webinar detail
+      { path: "webinars/:id", element: <WebinarDetail /> },
 
       // Blogs section
       {
@@ -93,10 +105,27 @@ const router = createBrowserRouter([
       { path: "contact", element: <ContactUs /> },
       { path: "career", element: <Careers /> },
       { path: "courses/:courseId", element: <CourseDetail /> },
+      { path: "login", element: <AdminLogin /> },
     ],
   },
 
-  // 404 catch-all
+  // Admin routes
+  {
+    path: "/admin",
+    element: <AdminLayout />,
+    children: [
+      { index: true, element: <Dashboard /> }, // /admin
+      { path: "dashboard", element: <Dashboard /> }, // /admin/dashboard
+      { path: "navbar", element: <AdminNavbar /> }, // /admin/dashboard
+      { path: "footer", element: <AdminFooter /> }, // /admin/dashboard
+      { path: "courses", element: <AdminCourses /> }, // /admin/dashboard
+      { path: "profile", element: <AdminProfile /> }, // /admin/dashboard
+      { path: "settings", element: <AdminSettings /> }, // /admin/dashboard
+      { path: "contact", element: <AdminContact /> }, // /admin/dashboard
+    ],
+  },
+
+  // 404 route
   {
     path: "*",
     element: <h2>404 page not found!</h2>,
