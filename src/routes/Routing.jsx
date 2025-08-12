@@ -49,6 +49,7 @@ import PaymentPolicyAdmin from "../Admin/AboutUS/PaymentPolicyAdmin";
 import WebniarAdmin from "../Admin/OurServices/WebniarAdmin";
 import ManthanWebniarAdmin from "../Admin/OurServices/ManthanWebniarAdmin";
 import AdminLogout from "../Admin/AddLogin/AdminLogout";
+import AdminBlogs from "../Admin/BlogAdmin/AdminBlogs";
 
 const router = createBrowserRouter([
   // Public routes
@@ -130,7 +131,7 @@ const router = createBrowserRouter([
       { path: "profile", element: <AdminProfile /> },
       { path: "settings", element: <AdminSettings /> },
       { path: "contact", element: <AdminContact /> },
-      { path: "contact", element: <AdminContact /> },
+      { path: "blog", element: <AdminBlogs /> },
       { path: "about/what-we-do", element: <AdminAbout /> },
       { path: "about/our-story", element: <OurStoryAdmin /> },
       { path: "about/core-committee", element: <CoreCmtyAdmin /> },
