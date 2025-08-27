@@ -6,8 +6,10 @@ import {
   FiPlus,
   FiLock,
   FiUnlock,
+  FiX,
+  FiCheck,
+  FiSearch,
 } from "react-icons/fi";
-import { FiX, FiCheck } from "react-icons/fi";
 
 const AdminPanel = () => {
   // State for all blog posts
@@ -38,20 +40,83 @@ const AdminPanel = () => {
     secondaryColor: "#F5F3FF",
     accentColor: "#4F46E5",
   });
+  const [categories, setCategories] = useState([
+    "Technology",
+    "Career",
+    "Interview Tips",
+    "Industry News",
+  ]);
+  const [authors, setAuthors] = useState([
+    "Admin User",
+    "Jane Smith",
+    "John Doe",
+    "Sarah Johnson",
+  ]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredBlogs, setFilteredBlogs] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [message, setMessage] = useState({ type: "", text: "" });
 
   // Fetch initial data
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const blogsRes = await fetch("http://localhost:5000/api/blogs");
-        const blogsData = await blogsRes.json();
-        setBlogs(blogsData);
-      } catch (err) {
-        console.error("Error fetching data:", err);
-      }
-    };
-    fetchData();
+    fetchBlogs();
+    fetchSettings();
   }, []);
+
+  // Filter blogs based on search term
+  useEffect(() => {
+    if (searchTerm) {
+      const filtered = blogs.filter(
+        (blog) =>
+          blog.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          blog.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          blog.author.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredBlogs(filtered);
+    } else {
+      setFilteredBlogs(blogs);
+    }
+  }, [searchTerm, blogs]);
+
+  // Show message for 3 seconds
+  useEffect(() => {
+    if (message.text) {
+      const timer = setTimeout(() => {
+        setMessage({ type: "", text: "" });
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [message]);
+
+  // Fetch blogs from API
+  const fetchBlogs = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch("http://localhost:5000/api/blogs");
+      if (!response.ok) throw new Error("Failed to fetch blogs");
+      const data = await response.json();
+      setBlogs(data);
+      setFilteredBlogs(data);
+    } catch (err) {
+      console.error("Error fetching blogs:", err);
+      setMessage({ type: "error", text: "Failed to fetch blogs" });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Fetch settings from API
+  const fetchSettings = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/api/settings");
+      if (response.ok) {
+        const data = await response.json();
+        setSettings(data);
+      }
+    } catch (err) {
+      console.error("Error fetching settings:", err);
+    }
+  };
 
   // Handle form input changes
   const handleChange = (e) => {
@@ -60,6 +125,16 @@ const AdminPanel = () => {
       ...prev,
       [name]: value,
     }));
+
+    // Auto-generate slug from title
+    if (name === "title" && !isEditing) {
+      const slug = value
+        .toLowerCase()
+        .replace(/[^a-z0-9 -]/g, "") // Remove invalid chars
+        .replace(/\s+/g, "-") // Replace spaces with -
+        .replace(/-+/g, "-"); // Replace multiple - with single -
+      setFormData((prev) => ({ ...prev, slug }));
+    }
   };
 
   // Handle tag addition
@@ -105,26 +180,35 @@ const AdminPanel = () => {
 
   // Create new blog post
   const handleCreate = async () => {
+    setIsLoading(true);
     try {
-      const res = await fetch("http://localhost:5000/api/blogs", {
+      const response = await fetch("http://localhost:5000/api/blogs", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
       });
-      const newBlog = await res.json();
+
+      if (!response.ok) throw new Error("Failed to create blog");
+
+      const newBlog = await response.json();
       setBlogs([...blogs, newBlog]);
       resetForm();
+      setMessage({ type: "success", text: "Blog post created successfully!" });
     } catch (err) {
       console.error("Error creating blog:", err);
+      setMessage({ type: "error", text: "Failed to create blog post" });
+    } finally {
+      setIsLoading(false);
     }
   };
 
   // Update blog post
   const handleUpdate = async () => {
+    setIsLoading(true);
     try {
-      const res = await fetch(
+      const response = await fetch(
         `http://localhost:5000/api/blogs/${formData._id}`,
         {
           method: "PUT",
@@ -134,26 +218,44 @@ const AdminPanel = () => {
           body: JSON.stringify(formData),
         }
       );
-      const updatedBlog = await res.json();
+
+      if (!response.ok) throw new Error("Failed to update blog");
+
+      const updatedBlog = await response.json();
       setBlogs(
         blogs.map((blog) => (blog._id === updatedBlog._id ? updatedBlog : blog))
       );
       resetForm();
+      setMessage({ type: "success", text: "Blog post updated successfully!" });
     } catch (err) {
       console.error("Error updating blog:", err);
+      setMessage({ type: "error", text: "Failed to update blog post" });
+    } finally {
+      setIsLoading(false);
     }
   };
 
   // Delete blog post
   const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this blog post?"))
+      return;
+
+    setIsLoading(true);
     try {
-      await fetch(`http://localhost:5000/api/blogs/${id}`, {
+      const response = await fetch(`http://localhost:5000/api/blogs/${id}`, {
         method: "DELETE",
       });
+
+      if (!response.ok) throw new Error("Failed to delete blog");
+
       setBlogs(blogs.filter((blog) => blog._id !== id));
       if (formData._id === id) resetForm();
+      setMessage({ type: "success", text: "Blog post deleted successfully!" });
     } catch (err) {
       console.error("Error deleting blog:", err);
+      setMessage({ type: "error", text: "Failed to delete blog post" });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -188,17 +290,32 @@ const AdminPanel = () => {
 
   // Save settings
   const saveSettings = async () => {
+    setIsLoading(true);
     try {
-      await fetch("http://localhost:5000/api/settings", {
+      const response = await fetch("http://localhost:5000/api/settings", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(settings),
       });
-      alert("Settings saved successfully!");
+
+      if (!response.ok) throw new Error("Failed to save settings");
+
+      setMessage({ type: "success", text: "Settings saved successfully!" });
     } catch (err) {
       console.error("Error saving settings:", err);
+      setMessage({ type: "error", text: "Failed to save settings" });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Handle key events for tags input
+  const handleTagKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleAddTag();
     }
   };
 
@@ -213,14 +330,28 @@ const AdminPanel = () => {
           <div className="flex items-center space-x-4">
             <button
               onClick={saveSettings}
-              className="flex items-center px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors"
+              disabled={isLoading}
+              className="flex items-center px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors disabled:bg-purple-300"
             >
               <FiSave className="mr-2" />
-              Save All Changes
+              {isLoading ? "Saving..." : "Save All Changes"}
             </button>
           </div>
         </div>
       </header>
+
+      {/* Message Banner */}
+      {message.text && (
+        <div
+          className={`max-w-7xl mx-auto px-4 py-2 ${
+            message.type === "error"
+              ? "bg-red-100 text-red-800"
+              : "bg-green-100 text-green-800"
+          }`}
+        >
+          {message.text}
+        </div>
+      )}
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
@@ -300,6 +431,7 @@ const AdminPanel = () => {
                         onChange={handleChange}
                         disabled={isLocked}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        placeholder="Enter blog title"
                       />
                     </div>
 
@@ -314,6 +446,7 @@ const AdminPanel = () => {
                         onChange={handleChange}
                         disabled={isLocked}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        placeholder="URL-friendly slug"
                       />
                     </div>
 
@@ -327,8 +460,15 @@ const AdminPanel = () => {
                         value={formData.category}
                         onChange={handleChange}
                         disabled={isLocked}
+                        list="categories"
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        placeholder="Select or enter category"
                       />
+                      <datalist id="categories">
+                        {categories.map((cat, index) => (
+                          <option key={index} value={cat} />
+                        ))}
+                      </datalist>
                     </div>
 
                     <div>
@@ -341,8 +481,15 @@ const AdminPanel = () => {
                         value={formData.author}
                         onChange={handleChange}
                         disabled={isLocked}
+                        list="authors"
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        placeholder="Select or enter author"
                       />
+                      <datalist id="authors">
+                        {authors.map((author, index) => (
+                          <option key={index} value={author} />
+                        ))}
+                      </datalist>
                     </div>
 
                     <div>
@@ -356,6 +503,7 @@ const AdminPanel = () => {
                         onChange={handleChange}
                         disabled={isLocked}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        placeholder="https://example.com/image.jpg"
                       />
                     </div>
 
@@ -384,6 +532,7 @@ const AdminPanel = () => {
                         disabled={isLocked}
                         rows="2"
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        placeholder="Brief description of the blog post"
                       />
                     </div>
 
@@ -396,8 +545,9 @@ const AdminPanel = () => {
                         value={formData.content}
                         onChange={handleChange}
                         disabled={isLocked}
-                        rows="4"
+                        rows="6"
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        placeholder="Main content of the blog post"
                       />
                     </div>
 
@@ -430,9 +580,10 @@ const AdminPanel = () => {
                           onChange={(e) =>
                             setFormData({ ...formData, newTag: e.target.value })
                           }
+                          onKeyDown={handleTagKeyDown}
                           disabled={isLocked}
                           className="flex-1 px-3 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                          placeholder="Add new tag"
+                          placeholder="Add new tag and press Enter"
                         />
                         <button
                           type="button"
@@ -457,85 +608,122 @@ const AdminPanel = () => {
                     )}
                     <button
                       onClick={isEditing ? handleUpdate : handleCreate}
-                      disabled={isLocked}
+                      disabled={isLocked || isLoading}
                       className={`px-4 py-2 rounded-md text-white ${
-                        isLocked
+                        isLocked || isLoading
                           ? "bg-purple-300"
                           : "bg-purple-600 hover:bg-purple-700"
                       }`}
                     >
-                      {isEditing ? "Update Post" : "Create Post"}
+                      {isLoading
+                        ? "Processing..."
+                        : isEditing
+                        ? "Update Post"
+                        : "Create Post"}
                     </button>
                   </div>
                 </div>
 
                 {/* Blog List Section */}
                 <div className="p-6">
-                  <h2 className="text-xl font-semibold text-gray-800 mb-4">
-                    All Blog Posts
-                  </h2>
-                  <div className="overflow-x-auto">
-                    <table className="min-w-full divide-y divide-gray-200">
-                      <thead className="bg-gray-50">
-                        <tr>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Title
-                          </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Category
-                          </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Author
-                          </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Date
-                          </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Actions
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="bg-white divide-y divide-gray-200">
-                        {blogs.map((blog) => (
-                          <tr key={blog._id}>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <div className="text-sm font-medium text-gray-900">
-                                {blog.title}
-                              </div>
-                              <div className="text-sm text-gray-500">
-                                {blog.slug}
-                              </div>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
-                                {blog.category}
-                              </span>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                              {blog.author}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                              {blog.createdAt?.slice(0, 10)}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                              <button
-                                onClick={() => handleEdit(blog)}
-                                className="text-purple-600 hover:text-purple-900 mr-3"
-                              >
-                                <FiEdit2 />
-                              </button>
-                              <button
-                                onClick={() => handleDelete(blog._id)}
-                                className="text-red-600 hover:text-red-900"
-                              >
-                                <FiTrash2 />
-                              </button>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                  <div className="flex justify-between items-center mb-4">
+                    <h2 className="text-xl font-semibold text-gray-800">
+                      All Blog Posts
+                    </h2>
+                    <div className="relative">
+                      <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                      <input
+                        type="text"
+                        placeholder="Search posts..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      />
+                    </div>
                   </div>
+
+                  {isLoading ? (
+                    <div className="text-center py-8">
+                      <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-purple-600"></div>
+                      <p className="mt-2 text-gray-600">Loading posts...</p>
+                    </div>
+                  ) : (
+                    <div className="overflow-x-auto">
+                      <table className="min-w-full divide-y divide-gray-200">
+                        <thead className="bg-gray-50">
+                          <tr>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                              Title
+                            </th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                              Category
+                            </th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                              Author
+                            </th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                              Date
+                            </th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                              Actions
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody className="bg-white divide-y divide-gray-200">
+                          {filteredBlogs.length > 0 ? (
+                            filteredBlogs.map((blog) => (
+                              <tr key={blog._id}>
+                                <td className="px-6 py-4 whitespace-nowrap">
+                                  <div className="text-sm font-medium text-gray-900">
+                                    {blog.title}
+                                  </div>
+                                  <div className="text-sm text-gray-500">
+                                    {blog.slug}
+                                  </div>
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap">
+                                  <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
+                                    {blog.category}
+                                  </span>
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                  {blog.author}
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                  {blog.createdAt?.slice(0, 10)}
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                  <button
+                                    onClick={() => handleEdit(blog)}
+                                    className="text-purple-600 hover:text-purple-900 mr-3"
+                                    title="Edit"
+                                  >
+                                    <FiEdit2 />
+                                  </button>
+                                  <button
+                                    onClick={() => handleDelete(blog._id)}
+                                    className="text-red-600 hover:text-red-900"
+                                    title="Delete"
+                                  >
+                                    <FiTrash2 />
+                                  </button>
+                                </td>
+                              </tr>
+                            ))
+                          ) : (
+                            <tr>
+                              <td
+                                colSpan="5"
+                                className="px-6 py-4 text-center text-gray-500"
+                              >
+                                No blog posts found
+                              </td>
+                            </tr>
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
@@ -603,9 +791,10 @@ const AdminPanel = () => {
                 <div className="mt-6 flex justify-end">
                   <button
                     onClick={saveSettings}
-                    className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700"
+                    disabled={isLoading}
+                    className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 disabled:bg-purple-300"
                   >
-                    Save Settings
+                    {isLoading ? "Saving..." : "Save Settings"}
                   </button>
                 </div>
               </div>
@@ -735,9 +924,10 @@ const AdminPanel = () => {
                 <div className="mt-6 flex justify-end">
                   <button
                     onClick={saveSettings}
-                    className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700"
+                    disabled={isLoading}
+                    className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 disabled:bg-purple-300"
                   >
-                    Save Appearance
+                    {isLoading ? "Saving..." : "Save Appearance"}
                   </button>
                 </div>
               </div>

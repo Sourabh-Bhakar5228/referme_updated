@@ -3988,6 +3988,7 @@ const courses = [
       "Trading Platforms",
     ],
   },
+
   {
     id: "cloud-engineering-azure-devops",
     curriculumPdfUrl:

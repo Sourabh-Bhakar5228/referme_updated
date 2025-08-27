@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   FiSave,
   FiEdit,
@@ -17,6 +17,8 @@ const FooterAdminPanel = () => {
   const [theme, setTheme] = useState("dark");
   const [isLocked, setIsLocked] = useState(false);
   const [expandedSections, setExpandedSections] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState({ type: "", text: "" });
 
   // Toggle section expansion
   const toggleSection = (section) => {
@@ -82,6 +84,106 @@ const FooterAdminPanel = () => {
   const [formData, setFormData] = useState({});
   const [newLink, setNewLink] = useState({ text: "", path: "" });
 
+  // API base URL
+  const API_BASE = "http://localhost:5000/api/footer";
+
+  // Fetch footer data from API
+  useEffect(() => {
+    fetchFooterData();
+  }, []);
+
+  const fetchFooterData = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(API_BASE);
+      if (!response.ok) {
+        throw new Error("Failed to fetch footer data");
+      }
+      const data = await response.json();
+
+      // Update state with fetched data
+      if (data) setFooterData(data);
+
+      setMessage({ type: "success", text: "Footer data loaded successfully" });
+      setTimeout(() => setMessage({ type: "", text: "" }), 3000);
+    } catch (error) {
+      console.error("Error fetching footer data:", error);
+      setMessage({
+        type: "error",
+        text: "Failed to load footer data. Using default values.",
+      });
+      setTimeout(() => setMessage({ type: "", text: "" }), 5000);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Save all footer data to API
+  const saveAllData = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(API_BASE, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(footerData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to save footer data");
+      }
+
+      setMessage({
+        type: "success",
+        text: "All footer changes saved successfully!",
+      });
+      setTimeout(() => setMessage({ type: "", text: "" }), 3000);
+    } catch (error) {
+      console.error("Error saving footer data:", error);
+      setMessage({
+        type: "error",
+        text: "Failed to save footer changes. Please try again.",
+      });
+      setTimeout(() => setMessage({ type: "", text: "" }), 5000);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Save specific section data
+  const saveSectionData = async (section, data) => {
+    try {
+      setLoading(true);
+      const response = await fetch(`${API_BASE}/${section}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to save ${section} data`);
+      }
+
+      setMessage({
+        type: "success",
+        text: `${section} changes saved successfully!`,
+      });
+      setTimeout(() => setMessage({ type: "", text: "" }), 3000);
+    } catch (error) {
+      console.error(`Error saving ${section} data:`, error);
+      setMessage({
+        type: "error",
+        text: `Failed to save ${section} changes. Please try again.`,
+      });
+      setTimeout(() => setMessage({ type: "", text: "" }), 5000);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Toggle theme
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark");
@@ -108,11 +210,16 @@ const FooterAdminPanel = () => {
   };
 
   // Save changes
-  const saveChanges = () => {
+  const saveChanges = async () => {
+    // Update local state
     setFooterData((prev) => ({
       ...prev,
       [editingSection]: formData,
     }));
+
+    // Save to API
+    await saveSectionData(editingSection, formData);
+
     setEditingSection(null);
     setFormData({});
   };
@@ -161,6 +268,7 @@ const FooterAdminPanel = () => {
           onChange={handleInputChange}
           className="w-full px-3 py-2 border rounded"
           rows="3"
+          placeholder={`Enter ${label.toLowerCase()}...`}
         />
       ) : (
         <input
@@ -169,6 +277,7 @@ const FooterAdminPanel = () => {
           value={value}
           onChange={handleInputChange}
           className="w-full px-3 py-2 border rounded"
+          placeholder={`Enter ${label.toLowerCase()}...`}
         />
       )}
     </div>
@@ -413,6 +522,25 @@ const FooterAdminPanel = () => {
         theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-gray-800"
       }`}
     >
+      {/* Loading and Message Indicator */}
+      {loading && (
+        <div className="fixed top-4 right-4 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg z-50">
+          Saving changes...
+        </div>
+      )}
+
+      {message.text && (
+        <div
+          className={`fixed top-4 right-4 px-4 py-2 rounded-lg shadow-lg z-50 ${
+            message.type === "success"
+              ? "bg-green-500 text-white"
+              : "bg-red-500 text-white"
+          }`}
+        >
+          {message.text}
+        </div>
+      )}
+
       <div className="max-w-7xl mx-auto">
         {/* Header with controls */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
@@ -440,7 +568,10 @@ const FooterAdminPanel = () => {
             >
               {isLocked ? <FiLock size={18} /> : <FiUnlock size={18} />}
             </button>
-            <button className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 flex items-center text-sm">
+            <button
+              onClick={saveAllData}
+              className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 flex items-center text-sm"
+            >
               <FiSave className="inline mr-1" /> Save All Changes
             </button>
           </div>
@@ -457,8 +588,8 @@ const FooterAdminPanel = () => {
             <span className={isLocked ? "text-red-500" : "text-green-500"}>
               {isLocked ? "Editing locked" : "Editing unlocked"}
             </span>{" "}
-            | Theme: <span className="capitalize">{theme}</span> | Last saved:
-            Never
+            | Theme: <span className="capitalize">{theme}</span> | Last saved:{" "}
+            {message.type === "success" ? "Just now" : "Never"}
           </p>
         </div>
 

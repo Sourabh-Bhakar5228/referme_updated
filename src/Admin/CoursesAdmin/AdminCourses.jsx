@@ -9,6 +9,11 @@ const AdminPanel = () => {
   const [currentCourse, setCurrentCourse] = useState(null);
   const [isLocked, setIsLocked] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  // API base URL
+  const API_BASE_URL = "http://localhost:5000/api";
 
   // Form state
   const [formData, setFormData] = useState({
@@ -26,47 +31,39 @@ const AdminPanel = () => {
     curriculumPdfUrl: "",
   });
 
-  // Load data from localStorage on component mount
-  useEffect(() => {
-    const savedCourses = localStorage.getItem("coursesData");
-    if (savedCourses) {
-      setCourses(JSON.parse(savedCourses));
-    } else {
-      // Initial dummy data
-      const initialCourses = [
-        {
-          id: "1",
-          title: "Introduction to React",
-          category: "Software Testing & Programming",
-          type: "Online Course",
-          duration: "8 Weeks",
-          enrolled: "1200 Students",
-          bannerImage: "https://source.unsplash.com/random/400x300/?react",
-          recommended: true,
-          trending: false,
-          mostPurchased: true,
-          topRanked: false,
-          curriculumPdfUrl: "#",
-        },
-        {
-          id: "2",
-          title: "Advanced Data Science",
-          category: "Data Science, AI & Automation",
-          type: "Bootcamp",
-          duration: "12 Weeks",
-          enrolled: "850 Students",
-          bannerImage:
-            "https://source.unsplash.com/random/400x300/?datascience",
-          recommended: false,
-          trending: true,
-          mostPurchased: false,
-          topRanked: true,
-          curriculumPdfUrl: "#",
-        },
-      ];
-      setCourses(initialCourses);
-      localStorage.setItem("coursesData", JSON.stringify(initialCourses));
+  // Fetch courses from API
+  const fetchCourses = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await fetch(`${API_BASE_URL}/courses`);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setCourses(data);
+
+      // Also store in localStorage for backup/offline use
+      localStorage.setItem("coursesData", JSON.stringify(data));
+    } catch (err) {
+      console.error("Error fetching courses:", err);
+      setError(err.message);
+
+      // Fallback to localStorage if API fails
+      const savedCourses = localStorage.getItem("coursesData");
+      if (savedCourses) {
+        setCourses(JSON.parse(savedCourses));
+      }
+    } finally {
+      setLoading(false);
     }
+  };
+
+  // Load data from API on component mount
+  useEffect(() => {
+    fetchCourses();
   }, []);
 
   // Handle form input changes
@@ -80,29 +77,65 @@ const AdminPanel = () => {
   };
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (isEditing) {
-      // Update existing course
-      const updatedCourses = courses.map((course) =>
-        course.id === formData.id ? formData : course
-      );
-      setCourses(updatedCourses);
-      localStorage.setItem("coursesData", JSON.stringify(updatedCourses));
-    } else {
-      // Add new course
-      const newCourse = {
-        ...formData,
-        id: Date.now().toString(),
-      };
-      const updatedCourses = [...courses, newCourse];
-      setCourses(updatedCourses);
-      localStorage.setItem("coursesData", JSON.stringify(updatedCourses));
-    }
+    try {
+      setLoading(true);
+      setError(null);
 
-    resetForm();
-    setHasChanges(false);
+      if (isEditing) {
+        // Update existing course via API
+        const response = await fetch(`${API_BASE_URL}/courses/${formData.id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const updatedCourse = await response.json();
+
+        // Update local state
+        const updatedCourses = courses.map((course) =>
+          course.id === formData.id ? updatedCourse : course
+        );
+        setCourses(updatedCourses);
+        localStorage.setItem("coursesData", JSON.stringify(updatedCourses));
+      } else {
+        // Add new course via API
+        const response = await fetch(`${API_BASE_URL}/courses`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const newCourse = await response.json();
+
+        // Update local state
+        const updatedCourses = [...courses, newCourse];
+        setCourses(updatedCourses);
+        localStorage.setItem("coursesData", JSON.stringify(updatedCourses));
+      }
+
+      resetForm();
+      setHasChanges(false);
+    } catch (err) {
+      console.error("Error saving course:", err);
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Reset form
@@ -135,22 +168,63 @@ const AdminPanel = () => {
   };
 
   // Delete course
-  const deleteCourse = (id) => {
+  const deleteCourse = async (id) => {
     if (isLocked) return;
 
-    const updatedCourses = courses.filter((course) => course.id !== id);
-    setCourses(updatedCourses);
-    localStorage.setItem("coursesData", JSON.stringify(updatedCourses));
-    if (currentCourse && currentCourse.id === id) {
-      resetForm();
+    try {
+      setLoading(true);
+      setError(null);
+
+      const response = await fetch(`${API_BASE_URL}/courses/${id}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      // Update local state
+      const updatedCourses = courses.filter((course) => course.id !== id);
+      setCourses(updatedCourses);
+      localStorage.setItem("coursesData", JSON.stringify(updatedCourses));
+
+      if (currentCourse && currentCourse.id === id) {
+        resetForm();
+      }
+    } catch (err) {
+      console.error("Error deleting course:", err);
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   // Save all changes
-  const saveChanges = () => {
-    // In a real app, this would send data to a backend
-    alert("Changes saved successfully!");
-    setHasChanges(false);
+  const saveChanges = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      // In a real app, you might want to send all changes at once
+      // For now, we'll just confirm that local and API data are in sync
+      const response = await fetch(`${API_BASE_URL}/courses`);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const apiCourses = await response.json();
+      setCourses(apiCourses);
+      localStorage.setItem("coursesData", JSON.stringify(apiCourses));
+
+      alert("Changes saved successfully!");
+      setHasChanges(false);
+    } catch (err) {
+      console.error("Error saving changes:", err);
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Toggle lock
@@ -192,18 +266,43 @@ const AdminPanel = () => {
             </button>
             <button
               onClick={saveChanges}
-              disabled={!hasChanges}
+              disabled={!hasChanges || loading}
               className={`px-4 py-2 rounded-md font-medium ${
-                hasChanges
+                hasChanges && !loading
                   ? "bg-indigo-600 text-white hover:bg-indigo-700"
                   : "bg-gray-300 text-gray-500 cursor-not-allowed"
               }`}
             >
-              Save All Changes
+              {loading ? "Saving..." : "Save All Changes"}
             </button>
           </div>
         </div>
       </header>
+
+      {/* Error message */}
+      {error && (
+        <div className="max-w-7xl mx-auto px-4 py-2 sm:px-6 lg:px-8">
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+            <strong className="font-bold">Error: </strong>
+            <span className="block sm:inline">{error}</span>
+            <button
+              onClick={() => setError(null)}
+              className="absolute top-0 right-0 p-2"
+            >
+              <span className="text-red-700">×</span>
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Loading indicator */}
+      {loading && (
+        <div className="max-w-7xl mx-auto px-4 py-2 sm:px-6 lg:px-8">
+          <div className="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded">
+            Loading...
+          </div>
+        </div>
+      )}
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
@@ -269,7 +368,7 @@ const AdminPanel = () => {
                         onChange={handleInputChange}
                         className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                         required
-                        disabled={isLocked}
+                        disabled={isLocked || loading}
                       />
                     </div>
 
@@ -283,7 +382,7 @@ const AdminPanel = () => {
                         onChange={handleInputChange}
                         className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                         required
-                        disabled={isLocked}
+                        disabled={isLocked || loading}
                       >
                         <option value="">Select a category</option>
                         {categories
@@ -307,7 +406,7 @@ const AdminPanel = () => {
                         onChange={handleInputChange}
                         className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                         required
-                        disabled={isLocked}
+                        disabled={isLocked || loading}
                       />
                     </div>
 
@@ -322,7 +421,7 @@ const AdminPanel = () => {
                         onChange={handleInputChange}
                         className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                         required
-                        disabled={isLocked}
+                        disabled={isLocked || loading}
                       />
                     </div>
 
@@ -337,7 +436,7 @@ const AdminPanel = () => {
                         onChange={handleInputChange}
                         className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                         required
-                        disabled={isLocked}
+                        disabled={isLocked || loading}
                       />
                     </div>
 
@@ -352,7 +451,7 @@ const AdminPanel = () => {
                         onChange={handleInputChange}
                         className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                         required
-                        disabled={isLocked}
+                        disabled={isLocked || loading}
                       />
                     </div>
 
@@ -367,7 +466,7 @@ const AdminPanel = () => {
                         onChange={handleInputChange}
                         className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                         required
-                        disabled={isLocked}
+                        disabled={isLocked || loading}
                       />
                     </div>
 
@@ -379,7 +478,7 @@ const AdminPanel = () => {
                           checked={formData.recommended}
                           onChange={handleInputChange}
                           className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-                          disabled={isLocked}
+                          disabled={isLocked || loading}
                         />
                         <label className="ml-2 block text-sm text-gray-700">
                           Recommended
@@ -392,7 +491,7 @@ const AdminPanel = () => {
                           checked={formData.trending}
                           onChange={handleInputChange}
                           className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-                          disabled={isLocked}
+                          disabled={isLocked || loading}
                         />
                         <label className="ml-2 block text-sm text-gray-700">
                           Trending
@@ -405,7 +504,7 @@ const AdminPanel = () => {
                           checked={formData.mostPurchased}
                           onChange={handleInputChange}
                           className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-                          disabled={isLocked}
+                          disabled={isLocked || loading}
                         />
                         <label className="ml-2 block text-sm text-gray-700">
                           Most Purchased
@@ -418,7 +517,7 @@ const AdminPanel = () => {
                           checked={formData.topRanked}
                           onChange={handleInputChange}
                           className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-                          disabled={isLocked}
+                          disabled={isLocked || loading}
                         />
                         <label className="ml-2 block text-sm text-gray-700">
                           Top Ranked
@@ -429,21 +528,25 @@ const AdminPanel = () => {
                     <div className="flex space-x-3 pt-2">
                       <button
                         type="submit"
-                        disabled={isLocked}
+                        disabled={isLocked || loading}
                         className={`flex-1 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white ${
-                          isLocked
+                          isLocked || loading
                             ? "bg-gray-400 cursor-not-allowed"
                             : "bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                         }`}
                       >
-                        {isEditing ? "Update Course" : "Add Course"}
+                        {loading
+                          ? "Processing..."
+                          : isEditing
+                          ? "Update Course"
+                          : "Add Course"}
                       </button>
                       <button
                         type="button"
                         onClick={resetForm}
-                        disabled={isLocked}
+                        disabled={isLocked || loading}
                         className={`py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 ${
-                          isLocked
+                          isLocked || loading
                             ? "bg-gray-100 cursor-not-allowed"
                             : "bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                         }`}
@@ -467,9 +570,22 @@ const AdminPanel = () => {
                   <h2 className="text-lg font-medium text-gray-900">
                     All Courses
                   </h2>
-                  <p className="text-sm text-gray-500">
-                    {courses.length} courses
-                  </p>
+                  <div className="flex items-center">
+                    <p className="text-sm text-gray-500 mr-3">
+                      {courses.length} courses
+                    </p>
+                    <button
+                      onClick={fetchCourses}
+                      disabled={loading}
+                      className={`text-sm ${
+                        loading
+                          ? "text-gray-400 cursor-not-allowed"
+                          : "text-indigo-600 hover:text-indigo-800"
+                      }`}
+                    >
+                      Refresh
+                    </button>
+                  </div>
                 </div>
 
                 <div className="overflow-x-auto">
@@ -554,9 +670,9 @@ const AdminPanel = () => {
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <button
                               onClick={() => editCourse(course)}
-                              disabled={isLocked}
+                              disabled={isLocked || loading}
                               className={`mr-3 ${
-                                isLocked
+                                isLocked || loading
                                   ? "text-gray-400 cursor-not-allowed"
                                   : "text-indigo-600 hover:text-indigo-900"
                               }`}
@@ -565,9 +681,9 @@ const AdminPanel = () => {
                             </button>
                             <button
                               onClick={() => deleteCourse(course.id)}
-                              disabled={isLocked}
+                              disabled={isLocked || loading}
                               className={`${
-                                isLocked
+                                isLocked || loading
                                   ? "text-gray-400 cursor-not-allowed"
                                   : "text-red-600 hover:text-red-900"
                               }`}
@@ -615,9 +731,9 @@ const AdminPanel = () => {
                           </div>
                           <div className="ml-4 flex-shrink-0">
                             <button
-                              disabled={isLocked}
+                              disabled={isLocked || loading}
                               className={`font-medium ${
-                                isLocked
+                                isLocked || loading
                                   ? "text-gray-400 cursor-not-allowed"
                                   : "text-indigo-600 hover:text-indigo-500"
                               }`}
@@ -625,9 +741,9 @@ const AdminPanel = () => {
                               Edit
                             </button>
                             <button
-                              disabled={isLocked}
+                              disabled={isLocked || loading}
                               className={`ml-3 font-medium ${
-                                isLocked
+                                isLocked || loading
                                   ? "text-gray-400 cursor-not-allowed"
                                   : "text-red-600 hover:text-red-500"
                               }`}
@@ -648,12 +764,12 @@ const AdminPanel = () => {
                       type="text"
                       className="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-l-md sm:text-sm border-gray-300"
                       placeholder="Category name"
-                      disabled={isLocked}
+                      disabled={isLocked || loading}
                     />
                     <button
-                      disabled={isLocked}
+                      disabled={isLocked || loading}
                       className={`inline-flex items-center px-3 rounded-r-md border border-l-0 ${
-                        isLocked
+                        isLocked || loading
                           ? "bg-gray-100 text-gray-400 border-gray-300 cursor-not-allowed"
                           : "bg-indigo-600 text-white border-indigo-600 hover:bg-indigo-700"
                       }`}

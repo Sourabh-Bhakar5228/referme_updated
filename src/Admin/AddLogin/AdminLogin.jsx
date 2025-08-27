@@ -33,8 +33,8 @@ export default function AdminLoginPage() {
       const response = await new Promise((resolve) =>
         setTimeout(() => {
           if (
-            formData.email === "admin@example.com" &&
-            formData.password === "admin123"
+            formData.email === "ReferMe@gamil.com" &&
+            formData.password === "referme@123"
           ) {
             resolve({ success: true });
           } else {
@@ -57,6 +57,49 @@ export default function AdminLoginPage() {
       setIsLoading(false);
     }
   };
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   setIsLoading(true);
+  //   setError("");
+
+  //   if (!formData.email || !formData.password) {
+  //     setError("Please fill in all fields");
+  //     setIsLoading(false);
+  //     return;
+  //   }
+
+  //   try {
+  //     const response = await fetch("http://localhost:5000/api/users/login", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({
+  //         email: formData.email,
+  //         password: formData.password,
+  //       }),
+  //     });
+
+  //     // Log the response for debugging
+  //     console.log("Response status:", response.status);
+
+  //     const data = await response.json();
+  //     console.log("Response data:", data);
+
+  //     if (response.ok && data.success) {
+  //       localStorage.setItem("adminToken", data.token);
+  //       navigate("/admin/dashboard", { replace: true });
+  //     } else {
+  //       setError(data.message || "Login failed");
+  //     }
+  //   } catch (err) {
+  //     console.error("Login error details:", err);
+  //     setError("Network error. Please try again later.");
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
   const handleInputChange = (e) => {
     setFormData({
