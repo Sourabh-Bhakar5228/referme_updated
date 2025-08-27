@@ -33,7 +33,7 @@ export default function AdminLoginPage() {
       const response = await new Promise((resolve) =>
         setTimeout(() => {
           if (
-            formData.email === "ReferMe@gamil.com" &&
+            formData.email === "ReferMe@gmail.com" &&
             formData.password === "referme@123"
           ) {
             resolve({ success: true });
